@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>いぬかわガチャ</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      color: #fff;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+    }
+
+    body {
+      min-height: 100dvh;
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      min-height: 100dvh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+
+    /* =========================
+       ガチャ開始画面
+    ========================= */
+
+    #startScreen {
+      padding: 30px 20px;
+      background:
+        radial-gradient(
+          circle at center,
+          #222 0%,
+          #070707 55%,
+          #000 100%
+        );
+    }
+
+    .start-inner {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .title {
+      margin: 0 0 16px;
+      font-size: 36px;
+      font-weight: 900;
+    }
+
+    .message {
+      margin: 0 0 35px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    #drawButton {
+      width: 90%;
+      max-width: 360px;
+      min-height: 70px;
+
+      border: none;
+      border-radius: 999px;
+
+      background: #fff;
+      color: #111;
+
+      font-size: 22px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    #drawButton:active {
+      transform: scale(0.97);
+    }
+
+
+    /* =========================
+       動画画面
+    ========================= */
+
+    #movieScreen {
+      background: #000;
+      overflow: hidden;
+    }
+
+    #gachaMovie {
+      width: 100vw;
+      height: 100dvh;
+
+      object-fit: contain;
+
+      background: #000;
+    }
+
+
+    /* =========================
+       結果画面
+    ========================= */
+
+    #resultScreen {
+      padding:
+        max(25px, env(safe-area-inset-top))
+        18px
+        max(30px, env(safe-area-inset-bottom));
+
+      background:
+        radial-gradient(
+          circle at 50% 25%,
+          #283040 0%,
+          #0c1017 50%,
+          #050607 100%
+        );
+    }
+
+    .result-inner {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    #rank {
+      margin-bottom: 10px;
+
+      font-size: 42px;
+      font-weight: 1000;
+    }
+
+    #prizeName {
+      margin-bottom: 18px;
+
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    #prizeBox {
+      width: 100%;
+
+      transition:
+        filter 0.4s,
+        opacity 0.4s;
+    }
+
+    #prizeImage {
+      display: block;
+
+      width: 100%;
+      max-height: 58dvh;
+
+      margin: auto;
+
+      object-fit: contain;
+    }
+
+
+    /* 引換済み */
+
+    #prizeBox.redeemed {
+      filter: grayscale(100%);
+      opacity: 0.35;
+    }
+
+
+    #staffText {
+      margin: 22px 0 10px;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      color: #ffe28a;
+    }
+
+
+    #redeemButton {
+      width: 90%;
+      max-width: 380px;
+
+      min-height: 62px;
+
+      border: none;
+      border-radius: 12px;
+
+      background: #fff;
+      color: #111;
+
+      font-size: 17px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+
+    #redeemedText {
+      display: none;
+
+      margin-top: 20px;
+
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+
+    #thanks {
+      display: none;
+
+      margin-top: 22px;
+
+      font-size: 25px;
+      line-height: 1.5;
+      font-weight: 900;
+    }
+
+
+    .finished #redeemButton,
+    .finished #staffText {
+      display: none;
+    }
+
+    .finished #redeemedText,
+    .finished #thanks {
+      display: block;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     ガチャ開始
+========================= -->
+
+<section
+  id="startScreen"
+  class="screen active"
+>
+
+  <div class="start-inner">
+
+    <h1 class="title">
+      いぬかわガチャ
+    </h1>
+
+    <p class="message">
+      アンケートへのご回答<br>
+      ありがとうございます。
+    </p>
+
+    <button
+      id="drawButton"
+      type="button"
+    >
+      ガチャを引く
+    </button>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     ガチャ動画
+========================= -->
+
+<section
+  id="movieScreen"
+  class="screen"
+>
+
+  <video
+    id="gachaMovie"
+    playsinline
+    preload="auto"
+    disablepictureinpicture
+  ></video>
+
+</section>
+
+
+
+<!-- =========================
+     結果
+========================= -->
+
+<section
+  id="resultScreen"
+  class="screen"
+>
+
+  <div
+    id="resultInner"
+    class="result-inner"
+  >
+
+    <div id="rank"></div>
+
+    <div id="prizeName"></div>
+
+
+    <div id="prizeBox">
+
+      <img
+        id="prizeImage"
+        src=""
+        alt="景品"
+      >
+
+    </div>
+
+
+    <p id="staffText">
+      ※引き換えボタンはスタッフが押してください
+    </p>
+
+
+    <button
+      id="redeemButton"
+      type="button"
+    >
+      景品を引き換える
+    </button>
+
+
+    <div id="redeemedText">
+      引き換え済み
+    </div>
+
+
+    <div id="thanks">
+      ご協力ありがとうございました。
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<script>
+
+(function () {
+
+
+  /* =========================
+     保存キー
+  ========================= */
+
+  const RESULT_KEY =
+    "inukawa_gacha_result_test";
+
+  const REDEEM_KEY =
+    "inukawa_gacha_redeemed_test";
+
+
+  /* =========================
+     景品
+  ========================= */
+
+  const prizes = {
+
+    first: {
+
+      rank: "1等",
+
+      name: "米沢牛",
+
+      image: "1.png",
+
+      movie: "inkg2.mp4",
+
+      stock: 2
+
+    },
+
+
+    second: {
+
+      rank: "2等",
+
+      name: "シャインマスカット",
+
+      image: "2.png",
+
+      movie: "inkg2.mp4",
+
+      stock: 3
+
+    },
+
+
+    third: {
+
+      rank: "3等",
+
+      name: "お米",
+
+      image: "3.png",
+
+      movie: "inkg2.mp4",
+
+      stock: 10
+
+    },
+
+
+    participation: {
+
+      rank: "参加賞",
+
+      name: "ティッシュ",
+
+      image: "4.png",
+
+      movie: "inkg1.mp4",
+
+      stock: 1000
+
+    }
+
+  };
+
+
+  /* =========================
+     要素
+  ========================= */
+
+  const startScreen =
+    document.getElementById(
+      "startScreen"
+    );
+
+  const movieScreen =
+    document.getElementById(
+      "movieScreen"
+    );
+
+  const resultScreen =
+    document.getElementById(
+      "resultScreen"
+    );
+
+
+  const drawButton =
+    document.getElementById(
+      "drawButton"
+    );
+
+
+  const movie =
+    document.getElementById(
+      "gachaMovie"
+    );
+
+
+  const rank =
+    document.getElementById(
+      "rank"
+    );
+
+
+  const prizeName =
+    document.getElementById(
+      "prizeName"
+    );
+
+
+  const prizeImage =
+    document.getElementById(
+      "prizeImage"
+    );
+
+
+  const prizeBox =
+    document.getElementById(
+      "prizeBox"
+    );
+
+
+  const redeemButton =
+    document.getElementById(
+      "redeemButton"
+    );
+
+
+  const resultInner =
+    document.getElementById(
+      "resultInner"
+    );
+
+
+  /* =========================
+     画面切替
+  ========================= */
+
+  function showScreen(
+    target
+  ) {
+
+    startScreen
+      .classList
+      .remove(
+        "active"
+      );
+
+
+    movieScreen
+      .classList
+      .remove(
+        "active"
+      );
+
+
+    resultScreen
+      .classList
+      .remove(
+        "active"
+      );
+
+
+    target
+      .classList
+      .add(
+        "active"
+      );
+
+  }
+
+
+  /* =========================
+     テスト抽選
+     
+     1015個
+     
+     1等 2
+     2等 3
+     3等 10
+     参加賞 1000
+  ========================= */
+
+  function testDraw() {
+
+    const number =
+      Math.floor(
+        Math.random() * 1015
+      );
+
+
+    if (
+      number < 2
+    ) {
+
+      return "first";
+
+    }
+
+
+    if (
+      number < 5
+    ) {
+
+      return "second";
+
+    }
+
+
+    if (
+      number < 15
+    ) {
+
+      return "third";
+
+    }
+
+
+    return "participation";
+
+  }
+
+
+  /* =========================
+     ガチャボタン
+  ========================= */
+
+  drawButton
+    .addEventListener(
+      "click",
+      function () {
+
+
+        drawButton.disabled =
+          true;
+
+
+        /*
+          テスト用
+
+          次の工程で
+          Apps Scriptの
+          在庫抽選に変更する
+        */
+
+        const result =
+          testDraw();
+
+
+        /*
+          抽選結果保存
+        */
+
+        localStorage.setItem(
+          RESULT_KEY,
+          result
+        );
+
+
+        localStorage.removeItem(
+          REDEEM_KEY
+        );
+
+
+        /*
+          動画開始
+        */
+
+        playMovie(
+          result
+        );
+
+      }
+    );
+
+
+  /* =========================
+     動画再生
+  ========================= */
+
+  function playMovie(
+    result
+  ) {
+
+    const prize =
+      prizes[
+        result
+      ];
+
+
+    movie.src =
+      prize.movie;
+
+
+    movie.currentTime =
+      0;
+
+
+    showScreen(
+      movieScreen
+    );
+
+
+    movie
+      .play()
+      .catch(
+        function () {
+
+          /*
+            万が一
+            動画再生失敗でも
+            結果は表示
+          */
+
+          showResult(
+            result
+          );
+
+        }
+      );
+
+  }
+
+
+  /* =========================
+     動画終了
+  ========================= */
+
+  movie
+    .addEventListener(
+      "ended",
+      function () {
+
+
+        const result =
+          localStorage.getItem(
+            RESULT_KEY
+          );
+
+
+        if (
+          result &&
+          prizes[result]
+        ) {
+
+          showResult(
+            result
+          );
+
+        }
+
+      }
+    );
+
+
+  /* =========================
+     景品表示
+  ========================= */
+
+  function showResult(
+    result
+  ) {
+
+    const prize =
+      prizes[
+        result
+      ];
+
+
+    rank.textContent =
+      prize.rank;
+
+
+    prizeName.textContent =
+      prize.name;
+
+
+    prizeImage.src =
+      prize.image;
+
+
+    showScreen(
+      resultScreen
+    );
+
+
+    const redeemed =
+      localStorage.getItem(
+        REDEEM_KEY
+      );
+
+
+    if (
+      redeemed === "1"
+    ) {
+
+      setRedeemed();
+
+    }
+
+  }
+
+
+  /* =========================
+     引き換え
+  ========================= */
+
+  redeemButton
+    .addEventListener(
+      "click",
+      function () {
+
+
+        const ok =
+          confirm(
+            "スタッフ確認\n\n景品を引き換え済みにしますか？"
+          );
+
+
+        if (
+          !ok
+        ) {
+
+          return;
+
+        }
+
+
+        localStorage.setItem(
+          REDEEM_KEY,
+          "1"
+        );
+
+
+        setRedeemed();
+
+      }
+    );
+
+
+  /* =========================
+     引き換え済み表示
+  ========================= */
+
+  function setRedeemed() {
+
+    prizeBox
+      .classList
+      .add(
+        "redeemed"
+      );
+
+
+    resultInner
+      .classList
+      .add(
+        "finished"
+      );
+
+  }
+
+
+  /* =========================
+     再読み込み対策
+  ========================= */
+
+  function restore() {
+
+    const result =
+      localStorage.getItem(
+        RESULT_KEY
+      );
+
+
+    if (
+      result &&
+      prizes[result]
+    ) {
+
+      showResult(
+        result
+      );
+
+      return;
+
+    }
+
+
+    showScreen(
+      startScreen
+    );
+
+  }
+
+
+  restore();
+
+
+})();
+
+</script>
+
+
+</body>
+
+</html>
