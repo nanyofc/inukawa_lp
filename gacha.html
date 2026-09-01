@@ -37,6 +37,10 @@
       min-height: 100dvh;
     }
 
+    button {
+      font-family: inherit;
+    }
+
     .screen {
       display: none;
       width: 100%;
@@ -57,11 +61,12 @@
 
     #startScreen {
       padding: 30px 20px;
+
       background:
         radial-gradient(
           circle at center,
           #222 0%,
-          #070707 55%,
+          #080808 55%,
           #000 100%
         );
     }
@@ -72,21 +77,21 @@
     }
 
     .title {
-      margin: 0 0 16px;
-      font-size: 36px;
+      margin: 0 0 18px;
+      font-size: 38px;
       font-weight: 900;
     }
 
     .message {
       margin: 0 0 35px;
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.8;
     }
 
     #drawButton {
       width: 90%;
       max-width: 360px;
-      min-height: 70px;
+      min-height: 72px;
 
       border: none;
       border-radius: 999px;
@@ -94,7 +99,7 @@
       background: #fff;
       color: #111;
 
-      font-size: 22px;
+      font-size: 23px;
       font-weight: 900;
 
       cursor: pointer;
@@ -106,15 +111,18 @@
 
 
     /* =========================
-       動画画面
+       ガチャ動画
     ========================= */
 
     #movieScreen {
+      padding: 0;
       background: #000;
       overflow: hidden;
     }
 
     #gachaMovie {
+      display: block;
+
       width: 100vw;
       height: 100dvh;
 
@@ -149,25 +157,20 @@
     }
 
     #rank {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
 
-      font-size: 42px;
+      font-size: 46px;
       font-weight: 1000;
-    }
 
-    #prizeName {
-      margin-bottom: 18px;
-
-      font-size: 20px;
-      font-weight: 900;
+      letter-spacing: 0.05em;
     }
 
     #prizeBox {
       width: 100%;
 
       transition:
-        filter 0.4s,
-        opacity 0.4s;
+        filter 0.4s ease,
+        opacity 0.4s ease;
     }
 
     #prizeImage {
@@ -176,19 +179,15 @@
       width: 100%;
       max-height: 58dvh;
 
-      margin: auto;
+      margin: 0 auto;
 
       object-fit: contain;
     }
 
 
-    /* 引換済み */
-
-    #prizeBox.redeemed {
-      filter: grayscale(100%);
-      opacity: 0.35;
-    }
-
+    /* =========================
+       スタッフ引き換え
+    ========================= */
 
     #staffText {
       margin: 22px 0 10px;
@@ -198,7 +197,6 @@
 
       color: #ffe28a;
     }
-
 
     #redeemButton {
       width: 90%;
@@ -219,34 +217,64 @@
     }
 
 
-    #redeemedText {
-      display: none;
+    /* =========================
+       引き換え後
+    ========================= */
 
-      margin-top: 20px;
-
-      font-size: 20px;
-      font-weight: 900;
+    #prizeBox.redeemed {
+      filter: grayscale(100%);
+      opacity: 0.35;
     }
 
-
-    #thanks {
+    #redeemedText {
       display: none;
 
       margin-top: 22px;
 
-      font-size: 25px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    #thanks {
+      display: none;
+
+      margin-top: 24px;
+
+      font-size: 26px;
       line-height: 1.5;
       font-weight: 900;
     }
 
+    #topButton {
+      display: none;
 
-    .finished #redeemButton,
-    .finished #staffText {
+      width: 90%;
+      max-width: 360px;
+
+      min-height: 58px;
+
+      margin: 30px auto 0;
+
+      border: 2px solid #fff;
+      border-radius: 999px;
+
+      background: transparent;
+      color: #fff;
+
+      font-size: 17px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+    .finished #staffText,
+    .finished #redeemButton {
       display: none;
     }
 
     .finished #redeemedText,
-    .finished #thanks {
+    .finished #thanks,
+    .finished #topButton {
       display: block;
     }
 
@@ -258,7 +286,7 @@
 
 
 <!-- =========================
-     ガチャ開始
+     1. ガチャ開始
 ========================= -->
 
 <section
@@ -291,7 +319,7 @@
 
 
 <!-- =========================
-     ガチャ動画
+     2. ガチャ動画
 ========================= -->
 
 <section
@@ -311,7 +339,7 @@
 
 
 <!-- =========================
-     結果
+     3. 結果画面
 ========================= -->
 
 <section
@@ -325,8 +353,6 @@
   >
 
     <div id="rank"></div>
-
-    <div id="prizeName"></div>
 
 
     <div id="prizeBox">
@@ -362,6 +388,15 @@
       ご協力ありがとうございました。
     </div>
 
+
+    <button
+      id="topButton"
+      type="button"
+    >
+      トップページへ戻る
+    </button>
+
+
   </div>
 
 </section>
@@ -374,79 +409,33 @@
 
 
   /* =========================
-     保存キー
-  ========================= */
-
-  const RESULT_KEY =
-    "inukawa_gacha_result_test";
-
-  const REDEEM_KEY =
-    "inukawa_gacha_redeemed_test";
-
-
-  /* =========================
-     景品
+     景品設定
   ========================= */
 
   const prizes = {
 
     first: {
-
       rank: "1等",
-
-      name: "米沢牛",
-
       image: "1.png",
-
-      movie: "inkg2.mp4",
-
-      stock: 2
-
+      movie: "inkg2.mp4"
     },
-
 
     second: {
-
       rank: "2等",
-
-      name: "シャインマスカット",
-
       image: "2.png",
-
-      movie: "inkg2.mp4",
-
-      stock: 3
-
+      movie: "inkg2.mp4"
     },
-
 
     third: {
-
       rank: "3等",
-
-      name: "お米",
-
       image: "3.png",
-
-      movie: "inkg2.mp4",
-
-      stock: 10
-
+      movie: "inkg2.mp4"
     },
 
-
     participation: {
-
       rank: "参加賞",
-
-      name: "ティッシュ",
-
       image: "4.png",
-
-      movie: "inkg1.mp4",
-
-      stock: 1000
-
+      movie: "inkg1.mp4"
     }
 
   };
@@ -477,42 +466,35 @@
       "drawButton"
     );
 
-
   const movie =
     document.getElementById(
       "gachaMovie"
     );
-
 
   const rank =
     document.getElementById(
       "rank"
     );
 
-
-  const prizeName =
-    document.getElementById(
-      "prizeName"
-    );
-
-
   const prizeImage =
     document.getElementById(
       "prizeImage"
     );
-
 
   const prizeBox =
     document.getElementById(
       "prizeBox"
     );
 
-
   const redeemButton =
     document.getElementById(
       "redeemButton"
     );
 
+  const topButton =
+    document.getElementById(
+      "topButton"
+    );
 
   const resultInner =
     document.getElementById(
@@ -520,53 +502,45 @@
     );
 
 
+  let currentResult = null;
+
+
   /* =========================
      画面切替
   ========================= */
 
-  function showScreen(
-    target
-  ) {
+  function showScreen(target) {
 
-    startScreen
-      .classList
-      .remove(
-        "active"
-      );
+    startScreen.classList.remove(
+      "active"
+    );
 
+    movieScreen.classList.remove(
+      "active"
+    );
 
-    movieScreen
-      .classList
-      .remove(
-        "active"
-      );
+    resultScreen.classList.remove(
+      "active"
+    );
 
-
-    resultScreen
-      .classList
-      .remove(
-        "active"
-      );
-
-
-    target
-      .classList
-      .add(
-        "active"
-      );
+    target.classList.add(
+      "active"
+    );
 
   }
 
 
   /* =========================
      テスト抽選
-     
-     1015個
-     
+
+     総数 1015
+
      1等 2
      2等 3
      3等 10
      参加賞 1000
+
+     ※今は何回でもテスト可能
   ========================= */
 
   function testDraw() {
@@ -577,27 +551,21 @@
       );
 
 
-    if (
-      number < 2
-    ) {
+    if (number < 2) {
 
       return "first";
 
     }
 
 
-    if (
-      number < 5
-    ) {
+    if (number < 5) {
 
       return "second";
 
     }
 
 
-    if (
-      number < 15
-    ) {
+    if (number < 15) {
 
       return "third";
 
@@ -610,70 +578,39 @@
 
 
   /* =========================
-     ガチャボタン
+     ガチャを引く
   ========================= */
 
-  drawButton
-    .addEventListener(
-      "click",
-      function () {
+  drawButton.addEventListener(
+    "click",
+    function () {
+
+      drawButton.disabled = true;
 
 
-        drawButton.disabled =
-          true;
+      currentResult =
+        testDraw();
 
 
-        /*
-          テスト用
+      playMovie(
+        currentResult
+      );
 
-          次の工程で
-          Apps Scriptの
-          在庫抽選に変更する
-        */
-
-        const result =
-          testDraw();
-
-
-        /*
-          抽選結果保存
-        */
-
-        localStorage.setItem(
-          RESULT_KEY,
-          result
-        );
-
-
-        localStorage.removeItem(
-          REDEEM_KEY
-        );
-
-
-        /*
-          動画開始
-        */
-
-        playMovie(
-          result
-        );
-
-      }
-    );
+    }
+  );
 
 
   /* =========================
      動画再生
   ========================= */
 
-  function playMovie(
-    result
-  ) {
+  function playMovie(result) {
 
     const prize =
-      prizes[
-        result
-      ];
+      prizes[result];
+
+
+    movie.pause();
 
 
     movie.src =
@@ -689,16 +626,9 @@
     );
 
 
-    movie
-      .play()
+    movie.play()
       .catch(
         function () {
-
-          /*
-            万が一
-            動画再生失敗でも
-            結果は表示
-          */
 
           showResult(
             result
@@ -714,53 +644,38 @@
      動画終了
   ========================= */
 
-  movie
-    .addEventListener(
-      "ended",
-      function () {
+  movie.addEventListener(
+    "ended",
+    function () {
 
 
-        const result =
-          localStorage.getItem(
-            RESULT_KEY
-          );
+      if (
+        currentResult &&
+        prizes[currentResult]
+      ) {
 
-
-        if (
-          result &&
-          prizes[result]
-        ) {
-
-          showResult(
-            result
-          );
-
-        }
+        showResult(
+          currentResult
+        );
 
       }
-    );
+
+    }
+  );
 
 
   /* =========================
      景品表示
   ========================= */
 
-  function showResult(
-    result
-  ) {
+  function showResult(result) {
 
     const prize =
-      prizes[
-        result
-      ];
+      prizes[result];
 
 
     rank.textContent =
       prize.rank;
-
-
-    prizeName.textContent =
-      prize.name;
 
 
     prizeImage.src =
@@ -771,117 +686,77 @@
       resultScreen
     );
 
-
-    const redeemed =
-      localStorage.getItem(
-        REDEEM_KEY
-      );
+  }
 
 
-    if (
-      redeemed === "1"
-    ) {
+  /* =========================
+     スタッフ引き換え
+  ========================= */
+
+  redeemButton.addEventListener(
+    "click",
+    function () {
+
+
+      const ok =
+        confirm(
+          "スタッフ確認\n\n景品を引き換え済みにしますか？"
+        );
+
+
+      if (!ok) {
+
+        return;
+
+      }
+
 
       setRedeemed();
 
     }
-
-  }
-
-
-  /* =========================
-     引き換え
-  ========================= */
-
-  redeemButton
-    .addEventListener(
-      "click",
-      function () {
-
-
-        const ok =
-          confirm(
-            "スタッフ確認\n\n景品を引き換え済みにしますか？"
-          );
-
-
-        if (
-          !ok
-        ) {
-
-          return;
-
-        }
-
-
-        localStorage.setItem(
-          REDEEM_KEY,
-          "1"
-        );
-
-
-        setRedeemed();
-
-      }
-    );
+  );
 
 
   /* =========================
-     引き換え済み表示
+     引き換え済み
   ========================= */
 
   function setRedeemed() {
 
-    prizeBox
-      .classList
-      .add(
-        "redeemed"
-      );
+    prizeBox.classList.add(
+      "redeemed"
+    );
 
 
-    resultInner
-      .classList
-      .add(
-        "finished"
-      );
-
-  }
-
-
-  /* =========================
-     再読み込み対策
-  ========================= */
-
-  function restore() {
-
-    const result =
-      localStorage.getItem(
-        RESULT_KEY
-      );
-
-
-    if (
-      result &&
-      prizes[result]
-    ) {
-
-      showResult(
-        result
-      );
-
-      return;
-
-    }
-
-
-    showScreen(
-      startScreen
+    resultInner.classList.add(
+      "finished"
     );
 
   }
 
 
-  restore();
+  /* =========================
+     トップへ戻る
+  ========================= */
+
+  topButton.addEventListener(
+    "click",
+    function () {
+
+
+      /*
+        テスト仕様
+
+        トップへ戻れば
+        またアンケートから
+        何回でもテスト可能
+      */
+
+      window.location.href =
+        "index.html";
+
+    }
+  );
 
 
 })();
