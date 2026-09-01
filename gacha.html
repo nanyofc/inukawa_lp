@@ -55,7 +55,7 @@
     }
 
 
-    /* ガチャ開始画面 */
+    /* ガチャ開始 */
 
     #startScreen {
       padding: 30px 20px;
@@ -112,7 +112,7 @@
     }
 
 
-    /* ガチャ動画 */
+    /* 動画 */
 
     #movieScreen {
       padding: 0;
@@ -129,7 +129,7 @@
     }
 
 
-    /* 結果画面 */
+    /* 結果 */
 
     #resultScreen {
       padding:
@@ -201,6 +201,10 @@
       cursor: pointer;
     }
 
+    #redeemButton:disabled {
+      opacity: 0.55;
+    }
+
 
     /* 引き換え後 */
 
@@ -263,7 +267,7 @@
 <body>
 
 
-<!-- ガチャ開始 -->
+<!-- 1 ガチャ開始 -->
 
 <section
   id="startScreen"
@@ -294,7 +298,7 @@
 
 
 
-<!-- ガチャ動画 -->
+<!-- 2 動画 -->
 
 <section
   id="movieScreen"
@@ -312,7 +316,7 @@
 
 
 
-<!-- 結果画面 -->
+<!-- 3 結果 -->
 
 <section
   id="resultScreen"
@@ -386,7 +390,7 @@
     "https://script.google.com/macros/s/AKfycbxo5-G2MnqJh91QPobD1MnM3ueK6yp1dBwGD71w1lxFNS2b0n3A6xDLiD37Iyu9HowLIw/exec";
 
 
-  /* 景品設定 */
+  /* 景品 */
 
   const prizes = {
 
@@ -455,13 +459,17 @@
 
   let currentResult = null;
 
+  let currentDrawId = null;
+
 
   /* 画面切替 */
 
   function showScreen(target) {
 
     startScreen.classList.remove("active");
+
     movieScreen.classList.remove("active");
+
     resultScreen.classList.remove("active");
 
     target.classList.add("active");
@@ -469,88 +477,117 @@
   }
 
 
-  /* Apps Scriptへ抽選要求 */
+  /* Apps Script通信 */
 
-  function requestDraw() {
+  function requestApi(action, params) {
 
-    return new Promise(function (resolve, reject) {
+    return new Promise(
+      function (resolve, reject) {
 
-      const callbackName =
-        "gachaCallback_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2);
-
-
-      const script =
-        document.createElement("script");
+        const callbackName =
+          "gachaCallback_" +
+          Date.now() +
+          "_" +
+          Math.random()
+            .toString(36)
+            .slice(2);
 
 
-      const timer =
-        setTimeout(function () {
+        const script =
+          document.createElement("script");
 
-          cleanup();
 
-          reject(
-            new Error("通信タイムアウト")
+        const timer =
+          setTimeout(
+            function () {
+
+              cleanup();
+
+              reject(
+                new Error("通信タイムアウト")
+              );
+
+            },
+            10000
           );
 
-        }, 10000);
 
+        function cleanup() {
 
-      function cleanup() {
+          clearTimeout(timer);
 
-        clearTimeout(timer);
+          delete window[callbackName];
 
-        delete window[callbackName];
+          if (script.parentNode) {
 
-        if (script.parentNode) {
+            script.parentNode
+              .removeChild(script);
 
-          script.parentNode
-            .removeChild(script);
+          }
 
         }
 
+
+        window[callbackName] =
+          function (data) {
+
+            cleanup();
+
+            resolve(data);
+
+          };
+
+
+        script.onerror =
+          function () {
+
+            cleanup();
+
+            reject(
+              new Error("通信エラー")
+            );
+
+          };
+
+
+        let url =
+          GACHA_API_URL +
+          "?action=" +
+          encodeURIComponent(action) +
+          "&callback=" +
+          encodeURIComponent(callbackName) +
+          "&_=" +
+          Date.now();
+
+
+        if (params) {
+
+          Object.keys(params)
+            .forEach(
+              function (key) {
+
+                url +=
+                  "&" +
+                  encodeURIComponent(key) +
+                  "=" +
+                  encodeURIComponent(
+                    params[key]
+                  );
+
+              }
+            );
+
+        }
+
+
+        script.src = url;
+
+
+        document.head
+          .appendChild(script);
+
       }
-
-
-      window[callbackName] =
-        function (data) {
-
-          cleanup();
-
-          resolve(data);
-
-        };
-
-
-      script.onerror =
-        function () {
-
-          cleanup();
-
-          reject(
-            new Error("通信エラー")
-          );
-
-        };
-
-
-      script.src =
-        GACHA_API_URL +
-        "?action=draw" +
-        "&callback=" +
-        encodeURIComponent(callbackName) +
-        "&_=" +
-        Date.now();
-
-
-      document.head
-        .appendChild(script);
-
-    });
+    );
 
   }
 
@@ -570,7 +607,9 @@
       try {
 
         const data =
-          await requestDraw();
+          await requestApi(
+            "draw"
+          );
 
 
         if (
@@ -584,6 +623,7 @@
               ? data.message
               : "抽選できませんでした"
           );
+
 
           drawButton.disabled =
             false;
@@ -600,12 +640,25 @@
           data.result;
 
 
+        currentDrawId =
+          data.drawId;
+
+
         if (
           !prizes[currentResult]
         ) {
 
           throw new Error(
             "景品データがありません"
+          );
+
+        }
+
+
+        if (!currentDrawId) {
+
+          throw new Error(
+            "抽選IDがありません"
           );
 
         }
@@ -620,9 +673,11 @@
 
         console.error(error);
 
+
         alert(
           "通信に失敗しました。\nもう一度お試しください。"
         );
+
 
         drawButton.disabled =
           false;
@@ -636,7 +691,7 @@
   );
 
 
-  /* 動画再生 */
+  /* 動画 */
 
   function playMovie(result) {
 
@@ -646,8 +701,10 @@
 
     movie.pause();
 
+
     movie.src =
       prize.movie;
+
 
     movie.currentTime =
       0;
@@ -659,13 +716,15 @@
 
 
     movie.play()
-      .catch(function () {
+      .catch(
+        function () {
 
-        showResult(
-          result
-        );
+          showResult(
+            result
+          );
 
-      });
+        }
+      );
 
   }
 
@@ -691,7 +750,7 @@
   );
 
 
-  /* 景品表示 */
+  /* 結果 */
 
   function showResult(result) {
 
@@ -714,11 +773,12 @@
   }
 
 
-  /* スタッフ引き換え */
+  /* 景品引き換え */
 
   redeemButton.addEventListener(
     "click",
-    function () {
+    async function () {
+
 
       const ok =
         confirm(
@@ -733,13 +793,86 @@
       }
 
 
-      setRedeemed();
+      if (!currentDrawId) {
+
+        alert(
+          "抽選情報がありません。"
+        );
+
+        return;
+
+      }
+
+
+      redeemButton.disabled =
+        true;
+
+      redeemButton.textContent =
+        "処理中…";
+
+
+      try {
+
+        const data =
+          await requestApi(
+            "redeem",
+            {
+              drawId:
+                currentDrawId
+            }
+          );
+
+
+        if (
+          !data ||
+          !data.success
+        ) {
+
+          alert(
+            data &&
+            data.message
+              ? data.message
+              : "引き換え処理に失敗しました"
+          );
+
+
+          redeemButton.disabled =
+            false;
+
+          redeemButton.textContent =
+            "景品を引き換える";
+
+          return;
+
+        }
+
+
+        setRedeemed();
+
+
+      } catch (error) {
+
+        console.error(error);
+
+
+        alert(
+          "通信に失敗しました。\nもう一度お試しください。"
+        );
+
+
+        redeemButton.disabled =
+          false;
+
+        redeemButton.textContent =
+          "景品を引き換える";
+
+      }
 
     }
   );
 
 
-  /* 引き換え済み */
+  /* 引換済み表示 */
 
   function setRedeemed() {
 
@@ -755,7 +888,7 @@
   }
 
 
-  /* トップへ戻る */
+  /* TOP */
 
   topButton.addEventListener(
     "click",
