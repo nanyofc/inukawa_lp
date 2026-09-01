@@ -55,9 +55,7 @@
     }
 
 
-    /* =========================
-       ガチャ開始画面
-    ========================= */
+    /* ガチャ開始画面 */
 
     #startScreen {
       padding: 30px 20px;
@@ -109,10 +107,12 @@
       transform: scale(0.97);
     }
 
+    #drawButton:disabled {
+      opacity: 0.6;
+    }
 
-    /* =========================
-       ガチャ動画
-    ========================= */
+
+    /* ガチャ動画 */
 
     #movieScreen {
       padding: 0;
@@ -122,19 +122,14 @@
 
     #gachaMovie {
       display: block;
-
       width: 100vw;
       height: 100dvh;
-
       object-fit: contain;
-
       background: #000;
     }
 
 
-    /* =========================
-       結果画面
-    ========================= */
+    /* 結果画面 */
 
     #resultScreen {
       padding:
@@ -158,10 +153,8 @@
 
     #rank {
       margin-bottom: 20px;
-
       font-size: 46px;
       font-weight: 1000;
-
       letter-spacing: 0.05em;
     }
 
@@ -175,33 +168,25 @@
 
     #prizeImage {
       display: block;
-
       width: 100%;
       max-height: 58dvh;
-
       margin: 0 auto;
-
       object-fit: contain;
     }
 
 
-    /* =========================
-       スタッフ引き換え
-    ========================= */
+    /* スタッフ引き換え */
 
     #staffText {
       margin: 22px 0 10px;
-
       font-size: 13px;
       font-weight: 700;
-
       color: #ffe28a;
     }
 
     #redeemButton {
       width: 90%;
       max-width: 380px;
-
       min-height: 62px;
 
       border: none;
@@ -217,9 +202,7 @@
     }
 
 
-    /* =========================
-       引き換え後
-    ========================= */
+    /* 引き換え後 */
 
     #prizeBox.redeemed {
       filter: grayscale(100%);
@@ -228,18 +211,14 @@
 
     #redeemedText {
       display: none;
-
       margin-top: 22px;
-
       font-size: 22px;
       font-weight: 900;
     }
 
     #thanks {
       display: none;
-
       margin-top: 24px;
-
       font-size: 26px;
       line-height: 1.5;
       font-weight: 900;
@@ -250,7 +229,6 @@
 
       width: 90%;
       max-width: 360px;
-
       min-height: 58px;
 
       margin: 30px auto 0;
@@ -285,9 +263,7 @@
 <body>
 
 
-<!-- =========================
-     1. ガチャ開始
-========================= -->
+<!-- ガチャ開始 -->
 
 <section
   id="startScreen"
@@ -318,9 +294,7 @@
 
 
 
-<!-- =========================
-     2. ガチャ動画
-========================= -->
+<!-- ガチャ動画 -->
 
 <section
   id="movieScreen"
@@ -338,9 +312,7 @@
 
 
 
-<!-- =========================
-     3. 結果画面
-========================= -->
+<!-- 結果画面 -->
 
 <section
   id="resultScreen"
@@ -408,9 +380,13 @@
 (function () {
 
 
-  /* =========================
-     景品設定
-  ========================= */
+  /* Apps Script */
+
+  const GACHA_API_URL =
+    "https://script.google.com/macros/s/AKfycbxo5-G2MnqJh91QPobD1MnM3ueK6yp1dBwGD71w1lxFNS2b0n3A6xDLiD37Iyu9HowLIw/exec";
+
+
+  /* 景品設定 */
 
   const prizes = {
 
@@ -441,168 +417,226 @@
   };
 
 
-  /* =========================
-     要素
-  ========================= */
+  /* 要素 */
 
   const startScreen =
-    document.getElementById(
-      "startScreen"
-    );
+    document.getElementById("startScreen");
 
   const movieScreen =
-    document.getElementById(
-      "movieScreen"
-    );
+    document.getElementById("movieScreen");
 
   const resultScreen =
-    document.getElementById(
-      "resultScreen"
-    );
-
+    document.getElementById("resultScreen");
 
   const drawButton =
-    document.getElementById(
-      "drawButton"
-    );
+    document.getElementById("drawButton");
 
   const movie =
-    document.getElementById(
-      "gachaMovie"
-    );
+    document.getElementById("gachaMovie");
 
   const rank =
-    document.getElementById(
-      "rank"
-    );
+    document.getElementById("rank");
 
   const prizeImage =
-    document.getElementById(
-      "prizeImage"
-    );
+    document.getElementById("prizeImage");
 
   const prizeBox =
-    document.getElementById(
-      "prizeBox"
-    );
+    document.getElementById("prizeBox");
 
   const redeemButton =
-    document.getElementById(
-      "redeemButton"
-    );
+    document.getElementById("redeemButton");
 
   const topButton =
-    document.getElementById(
-      "topButton"
-    );
+    document.getElementById("topButton");
 
   const resultInner =
-    document.getElementById(
-      "resultInner"
-    );
+    document.getElementById("resultInner");
 
 
   let currentResult = null;
 
 
-  /* =========================
-     画面切替
-  ========================= */
+  /* 画面切替 */
 
   function showScreen(target) {
 
-    startScreen.classList.remove(
-      "active"
-    );
+    startScreen.classList.remove("active");
+    movieScreen.classList.remove("active");
+    resultScreen.classList.remove("active");
 
-    movieScreen.classList.remove(
-      "active"
-    );
-
-    resultScreen.classList.remove(
-      "active"
-    );
-
-    target.classList.add(
-      "active"
-    );
+    target.classList.add("active");
 
   }
 
 
-  /* =========================
-     テスト抽選
+  /* Apps Scriptへ抽選要求 */
 
-     総数 1015
+  function requestDraw() {
 
-     1等 2
-     2等 3
-     3等 10
-     参加賞 1000
+    return new Promise(function (resolve, reject) {
 
-     ※今は何回でもテスト可能
-  ========================= */
-
-  function testDraw() {
-
-    const number =
-      Math.floor(
-        Math.random() * 1015
-      );
+      const callbackName =
+        "gachaCallback_" +
+        Date.now() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2);
 
 
-    if (number < 2) {
-
-      return "first";
-
-    }
+      const script =
+        document.createElement("script");
 
 
-    if (number < 5) {
+      const timer =
+        setTimeout(function () {
 
-      return "second";
+          cleanup();
 
-    }
+          reject(
+            new Error("通信タイムアウト")
+          );
 
-
-    if (number < 15) {
-
-      return "third";
-
-    }
+        }, 10000);
 
 
-    return "participation";
+      function cleanup() {
+
+        clearTimeout(timer);
+
+        delete window[callbackName];
+
+        if (script.parentNode) {
+
+          script.parentNode
+            .removeChild(script);
+
+        }
+
+      }
+
+
+      window[callbackName] =
+        function (data) {
+
+          cleanup();
+
+          resolve(data);
+
+        };
+
+
+      script.onerror =
+        function () {
+
+          cleanup();
+
+          reject(
+            new Error("通信エラー")
+          );
+
+        };
+
+
+      script.src =
+        GACHA_API_URL +
+        "?action=draw" +
+        "&callback=" +
+        encodeURIComponent(callbackName) +
+        "&_=" +
+        Date.now();
+
+
+      document.head
+        .appendChild(script);
+
+    });
 
   }
 
 
-  /* =========================
-     ガチャを引く
-  ========================= */
+  /* ガチャを引く */
 
   drawButton.addEventListener(
     "click",
-    function () {
+    async function () {
 
       drawButton.disabled = true;
 
+      drawButton.textContent =
+        "抽選中…";
 
-      currentResult =
-        testDraw();
+
+      try {
+
+        const data =
+          await requestDraw();
 
 
-      playMovie(
-        currentResult
-      );
+        if (
+          !data ||
+          !data.success
+        ) {
+
+          alert(
+            data &&
+            data.message
+              ? data.message
+              : "抽選できませんでした"
+          );
+
+          drawButton.disabled =
+            false;
+
+          drawButton.textContent =
+            "ガチャを引く";
+
+          return;
+
+        }
+
+
+        currentResult =
+          data.result;
+
+
+        if (
+          !prizes[currentResult]
+        ) {
+
+          throw new Error(
+            "景品データがありません"
+          );
+
+        }
+
+
+        playMovie(
+          currentResult
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "通信に失敗しました。\nもう一度お試しください。"
+        );
+
+        drawButton.disabled =
+          false;
+
+        drawButton.textContent =
+          "ガチャを引く";
+
+      }
 
     }
   );
 
 
-  /* =========================
-     動画再生
-  ========================= */
+  /* 動画再生 */
 
   function playMovie(result) {
 
@@ -612,10 +646,8 @@
 
     movie.pause();
 
-
     movie.src =
       prize.movie;
-
 
     movie.currentTime =
       0;
@@ -627,27 +659,22 @@
 
 
     movie.play()
-      .catch(
-        function () {
+      .catch(function () {
 
-          showResult(
-            result
-          );
+        showResult(
+          result
+        );
 
-        }
-      );
+      });
 
   }
 
 
-  /* =========================
-     動画終了
-  ========================= */
+  /* 動画終了 */
 
   movie.addEventListener(
     "ended",
     function () {
-
 
       if (
         currentResult &&
@@ -664,9 +691,7 @@
   );
 
 
-  /* =========================
-     景品表示
-  ========================= */
+  /* 景品表示 */
 
   function showResult(result) {
 
@@ -689,14 +714,11 @@
   }
 
 
-  /* =========================
-     スタッフ引き換え
-  ========================= */
+  /* スタッフ引き換え */
 
   redeemButton.addEventListener(
     "click",
     function () {
-
 
       const ok =
         confirm(
@@ -717,9 +739,7 @@
   );
 
 
-  /* =========================
-     引き換え済み
-  ========================= */
+  /* 引き換え済み */
 
   function setRedeemed() {
 
@@ -735,22 +755,11 @@
   }
 
 
-  /* =========================
-     トップへ戻る
-  ========================= */
+  /* トップへ戻る */
 
   topButton.addEventListener(
     "click",
     function () {
-
-
-      /*
-        テスト仕様
-
-        トップへ戻れば
-        またアンケートから
-        何回でもテスト可能
-      */
 
       window.location.href =
         "index.html";
