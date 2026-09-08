@@ -58,9 +58,63 @@
     }
 
 
-    /* =========================
+    /* =========================================
+       利用不可・案内画面
+       ========================================= */
+
+    #accessScreen {
+      padding: 30px 20px;
+
+      background:
+        radial-gradient(
+          circle at center,
+          #222 0%,
+          #080808 55%,
+          #000 100%
+        );
+    }
+
+    .access-inner {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    #accessTitle {
+      margin: 0 0 24px;
+
+      font-size: 32px;
+      line-height: 1.4;
+      font-weight: 900;
+    }
+
+    #accessMessage {
+      margin: 0 0 34px;
+
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    #accessButton {
+      width: 90%;
+      max-width: 360px;
+      min-height: 60px;
+
+      border: 2px solid #fff;
+      border-radius: 999px;
+
+      background: #fff;
+      color: #111;
+
+      font-size: 17px;
+      font-weight: 900;
+
+      cursor: pointer;
+    }
+
+
+    /* =========================================
        ガチャ開始
-       ========================= */
+       ========================================= */
 
     #startScreen {
       padding: 30px 20px;
@@ -120,15 +174,13 @@
     }
 
 
-    /* =========================
+    /* =========================================
        動画
-       ========================= */
+       ========================================= */
 
     #movieScreen {
       padding: 0;
-
       background: #000;
-
       overflow: hidden;
     }
 
@@ -144,9 +196,9 @@
     }
 
 
-    /* =========================
+    /* =========================================
        結果
-       ========================= */
+       ========================================= */
 
     #resultScreen {
       padding:
@@ -197,9 +249,9 @@
     }
 
 
-    /* =========================
+    /* =========================================
        スタッフ引き換え
-       ========================= */
+       ========================================= */
 
     #staffText {
       margin: 22px 0 10px;
@@ -233,9 +285,9 @@
     }
 
 
-    /* =========================
+    /* =========================================
        引き換え後
-       ========================= */
+       ========================================= */
 
     #prizeBox.redeemed {
       filter: grayscale(100%);
@@ -300,13 +352,43 @@
 <body>
 
 
-  <!-- =========================
+  <!-- =========================================
+       0 利用不可・案内
+       ========================================= -->
+
+  <section
+    id="accessScreen"
+    class="screen"
+  >
+
+    <div class="access-inner">
+
+      <h1 id="accessTitle">
+        ご案内
+      </h1>
+
+      <p id="accessMessage"></p>
+
+      <button
+        id="accessButton"
+        type="button"
+      >
+        トップページへ戻る
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================================
        1 ガチャ開始
-       ========================= -->
+       ========================================= -->
 
   <section
     id="startScreen"
-    class="screen active"
+    class="screen"
   >
 
     <div class="start-inner">
@@ -333,9 +415,9 @@
 
 
 
-  <!-- =========================
+  <!-- =========================================
        2 動画
-       ========================= -->
+       ========================================= -->
 
   <section
     id="movieScreen"
@@ -353,9 +435,9 @@
 
 
 
-  <!-- =========================
+  <!-- =========================================
        3 結果
-       ========================= -->
+       ========================================= -->
 
   <section
     id="resultScreen"
@@ -427,34 +509,32 @@
 
          false
          ↓
-         明日10:00〜10:30だけ利用可能
+         9/9 10:00〜10:30だけ利用可能
 
          true
          ↓
-         時間制限だけ解除
+         時間制限のみ解除
 
-         ※アンケート回答済みチェックは
-           DEMO MODEでも残ります
+         ※アンケート回答済みチェックは残る
          ================================================== */
 
       const DEMO_MODE = false;
 
 
       /* ==================================================
-         明日のガチャ利用時間
-
-         2026年9月9日
-         10:00 開始
-         10:30 終了
-
+         明日のテスト時間
          日本時間
          ================================================== */
 
       const GACHA_START =
-        new Date("2026-09-09T10:00:00+09:00");
+        new Date(
+          "2026-09-09T10:00:00+09:00"
+        );
 
       const GACHA_END =
-        new Date("2026-09-09T10:30:00+09:00");
+        new Date(
+          "2026-09-09T10:30:00+09:00"
+        );
 
 
       /* ==================================================
@@ -499,141 +579,29 @@
 
 
       /* ==================================================
-         ガチャ時間判定
-         ================================================== */
-
-      function getGachaStatus() {
-
-        if (DEMO_MODE) {
-          return "open";
-        }
-
-        const now =
-          new Date();
-
-
-        /* 10:00前 */
-
-        if (now < GACHA_START) {
-          return "before";
-        }
-
-
-        /* 10:00〜10:29:59 */
-
-        if (
-          now >= GACHA_START &&
-          now < GACHA_END
-        ) {
-          return "open";
-        }
-
-
-        /* 10:30以降 */
-
-        return "after";
-
-      }
-
-
-      /* ==================================================
-         アンケート回答済み確認
-         ================================================== */
-
-      function hasSurveyCompleted() {
-
-        return (
-          sessionStorage.getItem(
-            "inukawaSurveyCompleted"
-          ) === "true"
-        );
-
-      }
-
-
-      /* ==================================================
-         ページを開いた時の不正アクセス確認
-         ================================================== */
-
-      function checkGachaAccess() {
-
-        const gachaStatus =
-          getGachaStatus();
-
-
-        /* =========================
-           開始前
-           ========================= */
-
-        if (gachaStatus === "before") {
-
-          alert(
-            "ガチャはまだ利用開始前です。\n\n" +
-            "明日のテスト時間\n" +
-            "10:00〜10:30"
-          );
-
-          location.replace(
-            "index.html"
-          );
-
-          return false;
-        }
-
-
-        /* =========================
-           終了後
-           ========================= */
-
-        if (gachaStatus === "after") {
-
-          alert(
-            "本日のアンケートガチャ受付は終了しました。"
-          );
-
-          location.replace(
-            "index.html"
-          );
-
-          return false;
-        }
-
-
-        /* =========================
-           アンケート未回答
-           ========================= */
-
-        if (!hasSurveyCompleted()) {
-
-          alert(
-            "アンケート回答後にガチャへ進んでください。"
-          );
-
-          location.replace(
-            "survey.html"
-          );
-
-          return false;
-        }
-
-
-        return true;
-
-      }
-
-
-      /* ==================================================
-         ページを開いた時点で確認
-         ================================================== */
-
-      if (!checkGachaAccess()) {
-        return;
-      }
-
-
-      /* ==================================================
          要素
          ================================================== */
+
+      const accessScreen =
+        document.getElementById(
+          "accessScreen"
+        );
+
+      const accessTitle =
+        document.getElementById(
+          "accessTitle"
+        );
+
+      const accessMessage =
+        document.getElementById(
+          "accessMessage"
+        );
+
+      const accessButton =
+        document.getElementById(
+          "accessButton"
+        );
+
 
       const startScreen =
         document.getElementById(
@@ -649,6 +617,7 @@
         document.getElementById(
           "resultScreen"
         );
+
 
       const drawButton =
         document.getElementById(
@@ -697,12 +666,19 @@
       let currentDrawId =
         null;
 
+      let accessDestination =
+        "index.html";
+
 
       /* ==================================================
          画面切替
          ================================================== */
 
       function showScreen(target) {
+
+        accessScreen.classList.remove(
+          "active"
+        );
 
         startScreen.classList.remove(
           "active"
@@ -716,9 +692,190 @@
           "active"
         );
 
+
         target.classList.add(
           "active"
         );
+
+      }
+
+
+      /* ==================================================
+         案内画面
+         ================================================== */
+
+      function showAccessScreen(
+        title,
+        message,
+        buttonText,
+        destination
+      ) {
+
+        accessTitle.textContent =
+          title;
+
+        accessMessage.innerHTML =
+          message;
+
+        accessButton.textContent =
+          buttonText;
+
+        accessDestination =
+          destination;
+
+
+        showScreen(
+          accessScreen
+        );
+
+      }
+
+
+      /* ==================================================
+         案内ボタン
+         ================================================== */
+
+      accessButton.addEventListener(
+        "click",
+        function () {
+
+          window.location.href =
+            accessDestination;
+
+        }
+      );
+
+
+      /* ==================================================
+         ガチャ時間判定
+         ================================================== */
+
+      function getGachaStatus() {
+
+        if (DEMO_MODE) {
+          return "open";
+        }
+
+
+        const now =
+          new Date();
+
+
+        if (now < GACHA_START) {
+          return "before";
+        }
+
+
+        if (
+          now >= GACHA_START &&
+          now < GACHA_END
+        ) {
+          return "open";
+        }
+
+
+        return "after";
+
+      }
+
+
+      /* ==================================================
+         アンケート回答済み確認
+         ================================================== */
+
+      function hasSurveyCompleted() {
+
+        return (
+          sessionStorage.getItem(
+            "inukawaSurveyCompleted"
+          ) === "true"
+        );
+
+      }
+
+
+      /* ==================================================
+         アクセス判定
+         ================================================== */
+
+      function checkGachaAccess() {
+
+        const status =
+          getGachaStatus();
+
+
+        /* 受付前 */
+
+        if (status === "before") {
+
+          showAccessScreen(
+
+            "まだ受付開始前です",
+
+            "明日のテスト受付時間は<br><br>" +
+            "<strong>10:00〜10:30</strong><br><br>" +
+            "です。",
+
+            "トップページへ戻る",
+
+            "index.html"
+
+          );
+
+          return false;
+        }
+
+
+        /* 受付終了 */
+
+        if (status === "after") {
+
+          showAccessScreen(
+
+            "受付は終了しました",
+
+            "本日のアンケートガチャ受付は<br>" +
+            "終了しました。",
+
+            "トップページへ戻る",
+
+            "index.html"
+
+          );
+
+          return false;
+        }
+
+
+        /* アンケート未回答 */
+
+        if (!hasSurveyCompleted()) {
+
+          showAccessScreen(
+
+            "アンケート回答が必要です",
+
+            "ガチャはアンケートに<br>" +
+            "ご回答いただいた方のみ<br>" +
+            "ご利用いただけます。",
+
+            "アンケートへ",
+
+            "survey.html"
+
+          );
+
+          return false;
+        }
+
+
+        /* 正常 */
+
+        showScreen(
+          startScreen
+        );
+
+        return true;
 
       }
 
@@ -737,6 +894,7 @@
             resolve,
             reject
           ) {
+
 
             const callbackName =
               "gachaCallback_" +
@@ -779,6 +937,7 @@
               delete window[
                 callbackName
               ];
+
 
               if (
                 script.parentNode
@@ -884,48 +1043,67 @@
         async function () {
 
 
-          /* =========================================
-             抽選ボタンを押した瞬間に
-             時間をもう一度確認
-             ========================================= */
+          /* 押した瞬間に時間を再確認 */
 
-          const gachaStatus =
+          const status =
             getGachaStatus();
 
 
-          if (
-            gachaStatus !== "open"
-          ) {
+          if (status === "before") {
 
-            drawButton.disabled =
-              true;
+            showAccessScreen(
 
-            alert(
-              "ガチャの受付時間が終了しました。"
-            );
+              "まだ受付開始前です",
 
-            location.replace(
+              "明日のテスト受付時間は<br><br>" +
+              "<strong>10:00〜10:30</strong><br><br>" +
+              "です。",
+
+              "トップページへ戻る",
+
               "index.html"
+
             );
 
             return;
           }
 
 
-          /* =========================================
-             アンケート通行証を再確認
-             ========================================= */
+          if (status === "after") {
 
-          if (
-            !hasSurveyCompleted()
-          ) {
+            showAccessScreen(
 
-            alert(
-              "アンケート回答後にガチャへ進んでください。"
+              "受付は終了しました",
+
+              "本日のアンケートガチャ受付は<br>" +
+              "終了しました。",
+
+              "トップページへ戻る",
+
+              "index.html"
+
             );
 
-            location.replace(
+            return;
+          }
+
+
+          /* アンケート回答済み再確認 */
+
+          if (!hasSurveyCompleted()) {
+
+            showAccessScreen(
+
+              "アンケート回答が必要です",
+
+              "ガチャはアンケートに<br>" +
+              "ご回答いただいた方のみ<br>" +
+              "ご利用いただけます。",
+
+              "アンケートへ",
+
               "survey.html"
+
             );
 
             return;
@@ -1003,13 +1181,9 @@
 
 
             /* =========================================
-               ガチャを引いた時点で
-               アンケート通行証を消す
+               抽選成功したら通行証を消す
 
-               ↓
-
-               ページ更新して
-               もう一度引くのを防止
+               更新して2回目を引く対策
                ========================================= */
 
             sessionStorage.removeItem(
@@ -1042,171 +1216,4 @@
               false;
 
             drawButton.textContent =
-              "ガチャを引く";
-
-          }
-
-        }
-      );
-
-
-      /* ==================================================
-         動画
-         ================================================== */
-
-      function playMovie(
-        result
-      ) {
-
-        const prize =
-          prizes[result];
-
-
-        movie.pause();
-
-
-        movie.src =
-          prize.movie;
-
-
-        movie.currentTime =
-          0;
-
-
-        showScreen(
-          movieScreen
-        );
-
-
-        movie.play()
-          .catch(
-            function () {
-
-              showResult(
-                result
-              );
-
-            }
-          );
-
-      }
-
-
-      /* ==================================================
-         動画終了
-         ================================================== */
-
-      movie.addEventListener(
-        "ended",
-        function () {
-
-          if (
-            currentResult &&
-            prizes[
-              currentResult
-            ]
-          ) {
-
-            showResult(
-              currentResult
-            );
-
-          }
-
-        }
-      );
-
-
-      /* ==================================================
-         結果
-         ================================================== */
-
-      function showResult(
-        result
-      ) {
-
-        const prize =
-          prizes[result];
-
-
-        rank.textContent =
-          prize.rank;
-
-
-        prizeImage.src =
-          prize.image;
-
-
-        showScreen(
-          resultScreen
-        );
-
-      }
-
-
-      /* ==================================================
-         景品引き換え
-         ================================================== */
-
-      redeemButton.addEventListener(
-        "click",
-        async function () {
-
-
-          const ok =
-            confirm(
-              "スタッフ確認\n\n景品を引き換え済みにしますか？"
-            );
-
-
-          if (!ok) {
-            return;
-          }
-
-
-          if (
-            !currentDrawId
-          ) {
-
-            alert(
-              "抽選情報がありません。"
-            );
-
-            return;
-          }
-
-
-          redeemButton.disabled =
-            true;
-
-          redeemButton.textContent =
-            "処理中…";
-
-
-          try {
-
-            const data =
-              await requestApi(
-                "redeem",
-                {
-                  drawId:
-                    currentDrawId
-                }
-              );
-
-
-            if (
-              !data ||
-              !data.success
-            ) {
-
-              alert(
-                data &&
-                data.message
-                  ? data.message
-                  : "引き換え処理に失敗しました"
-              );
-
-
-              redeemButton.disabled =
-        
+             
