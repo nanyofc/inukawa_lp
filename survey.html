@@ -470,9 +470,115 @@
 
   <script>
 
+    /* ==================================================
+       DEMO MODE
+
+       false
+       ↓
+       明日10:00〜10:30だけ利用可能
+
+       true
+       ↓
+       時間を無視して強制利用可能
+       ================================================== */
+
+    const DEMO_MODE = false;
+
+
+    /* ==================================================
+       明日のアンケート受付時間
+
+       2026年9月9日
+       10:00〜10:30
+       日本時間
+       ================================================== */
+
+    const SURVEY_START =
+      new Date("2026-09-09T10:00:00+09:00");
+
+    const SURVEY_END =
+      new Date("2026-09-09T10:30:00+09:00");
+
+
+    /* ==================================================
+       Apps Script
+       ================================================== */
+
     const WEB_APP_URL =
       "https://script.google.com/macros/s/AKfycbxo5-G2MnqJh91QPobD1MnM3ueK6yp1dBwGD71w1lxFNS2b0n3A6xDLiD37Iyu9HowLIw/exec";
 
+
+    /* ==================================================
+       時間判定
+       ================================================== */
+
+    function getSurveyStatus() {
+
+      if (DEMO_MODE) {
+        return "open";
+      }
+
+      const now = new Date();
+
+      if (now < SURVEY_START) {
+        return "before";
+      }
+
+      if (
+        now >= SURVEY_START &&
+        now < SURVEY_END
+      ) {
+        return "open";
+      }
+
+      return "after";
+    }
+
+
+    /* ==================================================
+       直URLアクセス対策
+       ================================================== */
+
+    function checkSurveyAccess() {
+
+      const surveyStatus =
+        getSurveyStatus();
+
+      if (surveyStatus === "open") {
+        return true;
+      }
+
+      if (surveyStatus === "before") {
+
+        alert(
+          "アンケートガチャはまだ受付開始前です。\n\n" +
+          "明日のテスト受付時間\n" +
+          "10:00〜10:30"
+        );
+
+        location.replace("index.html");
+
+        return false;
+      }
+
+      alert(
+        "本日のアンケートガチャ受付は終了しました。"
+      );
+
+      location.replace("index.html");
+
+      return false;
+    }
+
+
+    /* ページを直接開かれた時点で確認 */
+
+    checkSurveyAccess();
+
+
+    /* ==================================================
+       各要素
+       ================================================== */
 
     const form =
       document.getElementById("surveyForm");
@@ -520,6 +626,11 @@
         "infoOtherText"
       );
 
+
+    /* ==================================================
+       興味のある体験
+       最大3つ
+       ================================================== */
 
     experienceChecks.forEach(check => {
 
@@ -571,6 +682,10 @@
     });
 
 
+    /* ==================================================
+       情報源 その他
+       ================================================== */
+
     infoOtherCheck.addEventListener(
       "change",
       () => {
@@ -597,12 +712,53 @@
     );
 
 
+    /* ==================================================
+       アンケート送信
+       ================================================== */
+
     form.addEventListener(
       "submit",
       async event => {
 
         event.preventDefault();
 
+
+        /* =========================================
+           送信する瞬間にも時間を再確認
+
+           10:30を過ぎていたら送信させない
+           ========================================= */
+
+        const currentStatus =
+          getSurveyStatus();
+
+        if (currentStatus !== "open") {
+
+          submitButton.disabled = true;
+
+          status.textContent =
+            "アンケートの受付時間が終了しました。";
+
+          status.style.color =
+            "#a40000";
+
+          alert(
+            "本日のアンケートガチャ受付は終了しました。"
+          );
+
+          setTimeout(() => {
+
+            location.replace("index.html");
+
+          }, 700);
+
+          return;
+        }
+
+
+        /* =========================================
+           興味のある体験
+           ========================================= */
 
         const selectedExperience =
           experienceChecks
@@ -621,6 +777,10 @@
           return;
         }
 
+
+        /* =========================================
+           情報源
+           ========================================= */
 
         const selectedInfo =
           infoChecks
@@ -734,12 +894,32 @@
             "送信完了";
 
 
+          /* =========================================
+             ガチャへの簡易通行証
+
+             アンケートを送信したブラウザだけ
+             gacha.htmlへ進めるために使用
+
+             ※本番ではApps Script側でも確認する
+             ========================================= */
+
+          sessionStorage.setItem(
+            "inukawaSurveyCompleted",
+            "true"
+          );
+
+          sessionStorage.setItem(
+            "inukawaSurveyCompletedAt",
+            String(Date.now())
+          );
 
 
           setTimeout(() => {
-            location.href = "gacha.html";
+
+            location.href =
+              "gacha.html";
+
           }, 800);
-          
 
 
         } catch (error) {
