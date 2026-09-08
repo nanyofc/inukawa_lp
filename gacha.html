@@ -58,9 +58,9 @@
     }
 
 
-    /* =========================================
-       利用不可・案内画面
-       ========================================= */
+    /* =========================
+       案内画面
+       ========================= */
 
     #accessScreen {
       padding: 30px 20px;
@@ -80,7 +80,7 @@
     }
 
     #accessTitle {
-      margin: 0 0 24px;
+      margin: 0 0 22px;
 
       font-size: 32px;
       line-height: 1.4;
@@ -88,7 +88,7 @@
     }
 
     #accessMessage {
-      margin: 0 0 34px;
+      margin: 0 0 32px;
 
       font-size: 17px;
       line-height: 1.9;
@@ -99,7 +99,7 @@
       max-width: 360px;
       min-height: 60px;
 
-      border: 2px solid #fff;
+      border: none;
       border-radius: 999px;
 
       background: #fff;
@@ -112,9 +112,9 @@
     }
 
 
-    /* =========================================
+    /* =========================
        ガチャ開始
-       ========================================= */
+       ========================= */
 
     #startScreen {
       padding: 30px 20px;
@@ -174,9 +174,9 @@
     }
 
 
-    /* =========================================
+    /* =========================
        動画
-       ========================================= */
+       ========================= */
 
     #movieScreen {
       padding: 0;
@@ -196,9 +196,9 @@
     }
 
 
-    /* =========================================
+    /* =========================
        結果
-       ========================================= */
+       ========================= */
 
     #resultScreen {
       padding:
@@ -249,9 +249,9 @@
     }
 
 
-    /* =========================================
-       スタッフ引き換え
-       ========================================= */
+    /* =========================
+       引換
+       ========================= */
 
     #staffText {
       margin: 22px 0 10px;
@@ -285,9 +285,9 @@
     }
 
 
-    /* =========================================
-       引き換え後
-       ========================================= */
+    /* =========================
+       引換済み
+       ========================= */
 
     #prizeBox.redeemed {
       filter: grayscale(100%);
@@ -352,26 +352,30 @@
 <body>
 
 
-  <!-- =========================================
-       0 利用不可・案内
-       ========================================= -->
+  <!-- =========================
+       案内画面
+       最初から表示
+       ========================= -->
 
   <section
     id="accessScreen"
-    class="screen"
+    class="screen active"
   >
 
     <div class="access-inner">
 
       <h1 id="accessTitle">
-        ご案内
+        確認中です
       </h1>
 
-      <p id="accessMessage"></p>
+      <p id="accessMessage">
+        ガチャの利用条件を確認しています。
+      </p>
 
       <button
         id="accessButton"
         type="button"
+        style="display:none;"
       >
         トップページへ戻る
       </button>
@@ -382,9 +386,9 @@
 
 
 
-  <!-- =========================================
-       1 ガチャ開始
-       ========================================= -->
+  <!-- =========================
+       ガチャ開始
+       ========================= -->
 
   <section
     id="startScreen"
@@ -415,9 +419,9 @@
 
 
 
-  <!-- =========================================
-       2 動画
-       ========================================= -->
+  <!-- =========================
+       動画
+       ========================= -->
 
   <section
     id="movieScreen"
@@ -435,9 +439,9 @@
 
 
 
-  <!-- =========================================
-       3 結果
-       ========================================= -->
+  <!-- =========================
+       結果
+       ========================= -->
 
   <section
     id="resultScreen"
@@ -501,7 +505,7 @@
 
   <script>
 
-    (function () {
+    (() => {
 
 
       /* ==================================================
@@ -509,13 +513,13 @@
 
          false
          ↓
-         9/9 10:00〜10:30だけ利用可能
+         9/9 10:00〜10:30のみ利用可能
 
          true
          ↓
-         時間制限のみ解除
+         時間制限だけ解除
 
-         ※アンケート回答済みチェックは残る
+         アンケート回答チェックは残る
          ================================================== */
 
       const DEMO_MODE = false;
@@ -523,7 +527,6 @@
 
       /* ==================================================
          明日のテスト時間
-         日本時間
          ================================================== */
 
       const GACHA_START =
@@ -579,29 +582,13 @@
 
 
       /* ==================================================
-         要素
+         DOM
          ================================================== */
 
       const accessScreen =
         document.getElementById(
           "accessScreen"
         );
-
-      const accessTitle =
-        document.getElementById(
-          "accessTitle"
-        );
-
-      const accessMessage =
-        document.getElementById(
-          "accessMessage"
-        );
-
-      const accessButton =
-        document.getElementById(
-          "accessButton"
-        );
-
 
       const startScreen =
         document.getElementById(
@@ -616,6 +603,22 @@
       const resultScreen =
         document.getElementById(
           "resultScreen"
+        );
+
+
+      const accessTitle =
+        document.getElementById(
+          "accessTitle"
+        );
+
+      const accessMessage =
+        document.getElementById(
+          "accessMessage"
+        );
+
+      const accessButton =
+        document.getElementById(
+          "accessButton"
         );
 
 
@@ -649,6 +652,16 @@
           "redeemButton"
         );
 
+      const redeemedText =
+        document.getElementById(
+          "redeemedText"
+        );
+
+      const thanks =
+        document.getElementById(
+          "thanks"
+        );
+
       const topButton =
         document.getElementById(
           "topButton"
@@ -660,11 +673,9 @@
         );
 
 
-      let currentResult =
-        null;
+      let currentResult = null;
 
-      let currentDrawId =
-        null;
+      let currentDrawId = null;
 
       let accessDestination =
         "index.html";
@@ -674,23 +685,25 @@
          画面切替
          ================================================== */
 
-      function showScreen(target) {
+      function showScreen(
+        target
+      ) {
 
-        accessScreen.classList.remove(
-          "active"
-        );
+        [
+          accessScreen,
+          startScreen,
+          movieScreen,
+          resultScreen
+        ]
+          .forEach(
+            screen => {
 
-        startScreen.classList.remove(
-          "active"
-        );
+              screen.classList.remove(
+                "active"
+              );
 
-        movieScreen.classList.remove(
-          "active"
-        );
-
-        resultScreen.classList.remove(
-          "active"
-        );
+            }
+          );
 
 
         target.classList.add(
@@ -704,7 +717,7 @@
          案内画面
          ================================================== */
 
-      function showAccessScreen(
+      function showAccess(
         title,
         message,
         buttonText,
@@ -720,6 +733,9 @@
         accessButton.textContent =
           buttonText;
 
+        accessButton.style.display =
+          "inline-block";
+
         accessDestination =
           destination;
 
@@ -731,13 +747,9 @@
       }
 
 
-      /* ==================================================
-         案内ボタン
-         ================================================== */
-
       accessButton.addEventListener(
         "click",
-        function () {
+        () => {
 
           window.location.href =
             accessDestination;
@@ -747,7 +759,7 @@
 
 
       /* ==================================================
-         ガチャ時間判定
+         時間判定
          ================================================== */
 
       function getGachaStatus() {
@@ -761,8 +773,12 @@
           new Date();
 
 
-        if (now < GACHA_START) {
+        if (
+          now < GACHA_START
+        ) {
+
           return "before";
+
         }
 
 
@@ -770,7 +786,9 @@
           now >= GACHA_START &&
           now < GACHA_END
         ) {
+
           return "open";
+
         }
 
 
@@ -780,7 +798,7 @@
 
 
       /* ==================================================
-         アンケート回答済み確認
+         アンケート回答済み判定
          ================================================== */
 
       function hasSurveyCompleted() {
@@ -795,20 +813,22 @@
 
 
       /* ==================================================
-         アクセス判定
+         初回アクセス判定
          ================================================== */
 
-      function checkGachaAccess() {
+      function checkAccess() {
 
         const status =
           getGachaStatus();
 
 
-        /* 受付前 */
+        /* 10:00前 */
 
-        if (status === "before") {
+        if (
+          status === "before"
+        ) {
 
-          showAccessScreen(
+          showAccess(
 
             "まだ受付開始前です",
 
@@ -822,15 +842,17 @@
 
           );
 
-          return false;
+          return;
         }
 
 
-        /* 受付終了 */
+        /* 10:30以降 */
 
-        if (status === "after") {
+        if (
+          status === "after"
+        ) {
 
-          showAccessScreen(
+          showAccess(
 
             "受付は終了しました",
 
@@ -843,15 +865,17 @@
 
           );
 
-          return false;
+          return;
         }
 
 
-        /* アンケート未回答 */
+        /* 時間内だがアンケート未回答 */
 
-        if (!hasSurveyCompleted()) {
+        if (
+          !hasSurveyCompleted()
+        ) {
 
-          showAccessScreen(
+          showAccess(
 
             "アンケート回答が必要です",
 
@@ -859,13 +883,13 @@
             "ご回答いただいた方のみ<br>" +
             "ご利用いただけます。",
 
-            "アンケートへ",
+            "アンケートへ進む",
 
             "survey.html"
 
           );
 
-          return false;
+          return;
         }
 
 
@@ -874,8 +898,6 @@
         showScreen(
           startScreen
         );
-
-        return true;
 
       }
 
@@ -886,14 +908,14 @@
 
       function requestApi(
         action,
-        params
+        params = {}
       ) {
 
         return new Promise(
-          function (
+          (
             resolve,
             reject
-          ) {
+          ) => {
 
 
             const callbackName =
@@ -913,7 +935,7 @@
 
             const timer =
               setTimeout(
-                function () {
+                () => {
 
                   cleanup();
 
@@ -934,9 +956,20 @@
                 timer
               );
 
-              delete window[
-                callbackName
-              ];
+
+              try {
+
+                delete window[
+                  callbackName
+                ];
+
+              } catch (error) {
+
+                window[
+                  callbackName
+                ] = undefined;
+
+              }
 
 
               if (
@@ -956,7 +989,7 @@
             window[
               callbackName
             ] =
-              function (data) {
+              data => {
 
                 cleanup();
 
@@ -968,7 +1001,7 @@
 
 
             script.onerror =
-              function () {
+              () => {
 
                 cleanup();
 
@@ -995,28 +1028,24 @@
               Date.now();
 
 
-            if (params) {
+            Object.keys(
+              params
+            )
+              .forEach(
+                key => {
 
-              Object.keys(
-                params
-              )
-                .forEach(
-                  function (key) {
+                  url +=
+                    "&" +
+                    encodeURIComponent(
+                      key
+                    ) +
+                    "=" +
+                    encodeURIComponent(
+                      params[key]
+                    );
 
-                    url +=
-                      "&" +
-                      encodeURIComponent(
-                        key
-                      ) +
-                      "=" +
-                      encodeURIComponent(
-                        params[key]
-                      );
-
-                  }
-                );
-
-            }
+                }
+              );
 
 
             script.src =
@@ -1035,23 +1064,25 @@
 
 
       /* ==================================================
-         ガチャを引く
+         ガチャ抽選
          ================================================== */
 
       drawButton.addEventListener(
         "click",
-        async function () {
+        async () => {
 
 
-          /* 押した瞬間に時間を再確認 */
+          /* 押した時点でも時間確認 */
 
           const status =
             getGachaStatus();
 
 
-          if (status === "before") {
+          if (
+            status === "before"
+          ) {
 
-            showAccessScreen(
+            showAccess(
 
               "まだ受付開始前です",
 
@@ -1069,9 +1100,11 @@
           }
 
 
-          if (status === "after") {
+          if (
+            status === "after"
+          ) {
 
-            showAccessScreen(
+            showAccess(
 
               "受付は終了しました",
 
@@ -1088,11 +1121,13 @@
           }
 
 
-          /* アンケート回答済み再確認 */
+          /* 回答済み確認 */
 
-          if (!hasSurveyCompleted()) {
+          if (
+            !hasSurveyCompleted()
+          ) {
 
-            showAccessScreen(
+            showAccess(
 
               "アンケート回答が必要です",
 
@@ -1100,7 +1135,7 @@
               "ご回答いただいた方のみ<br>" +
               "ご利用いただけます。",
 
-              "アンケートへ",
+              "アンケートへ進む",
 
               "survey.html"
 
@@ -1118,6 +1153,7 @@
 
 
           try {
+
 
             const data =
               await requestApi(
@@ -1180,11 +1216,7 @@
             }
 
 
-            /* =========================================
-               抽選成功したら通行証を消す
-
-               更新して2回目を引く対策
-               ========================================= */
+            /* 抽選成功後に通行証削除 */
 
             sessionStorage.removeItem(
               "inukawaSurveyCompleted"
@@ -1202,6 +1234,7 @@
 
           } catch (error) {
 
+
             console.error(
               error
             );
@@ -1216,4 +1249,16 @@
               false;
 
             drawButton.textContent =
-             
+              "ガチャを引く";
+
+          }
+
+        }
+      );
+
+
+      /* ==================================================
+         動画再生
+         ================================================== */
+
+      function playMovie(
