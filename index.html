@@ -1,18 +1,11 @@
 <!doctype html>
 <html lang="ja">
-
 <head>
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <title>いぬかわ賑わいプロジェクト</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>いぬかわ発見！アンケートガチャ</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -31,8 +24,7 @@
         "Yu Gothic",
         Meiryo,
         sans-serif;
-
-      background: #ffffff;
+      background: #fff;
       color: #222;
     }
 
@@ -40,15 +32,13 @@
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
-      overflow: hidden;
       background: #fff;
+      overflow: hidden;
     }
 
-
-    /* ==================================================
+    /* =========================
        ヘッダー
-       ================================================== */
-
+       ========================= */
     .campaign-header {
       position: relative;
       width: 100%;
@@ -61,241 +51,161 @@
       height: auto;
     }
 
-
-    /* ==================================================
+    /* =========================
        ヘッダーメニュー
-       ================================================== */
-
+       ========================= */
     .header-menu {
       position: absolute;
-
       left: 1.5%;
       right: 1.5%;
       bottom: 3%;
-
       display: grid;
-
-      grid-template-columns:
-        repeat(5, 1fr);
-
+      grid-template-columns: repeat(5, 1fr);
       gap: 5px;
+      align-items: center;
     }
 
     .header-menu a {
       display: flex;
-
       align-items: center;
       justify-content: center;
-
       min-width: 0;
       min-height: 38px;
-
       padding: 5px 2px;
-
+      background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid #111;
-
       border-radius: 8px;
-
-      background:
-        rgba(255,255,255,.95);
-
       color: #111;
-
       text-decoration: none;
       text-align: center;
-
-      font-size:
-        clamp(9px, 2.2vw, 14px);
-
+      font-size: clamp(9px, 2.2vw, 14px);
       font-weight: 800;
       line-height: 1.05;
-
-      box-shadow:
-        0 2px 4px rgba(0,0,0,.18);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
     }
 
     .header-menu a:active {
-      transform: scale(.97);
+      transform: scale(0.97);
     }
 
-
-    /* ==================================================
-       トップ画像4枚フェード
-       ================================================== */
-
+    /* =========================
+       トップ4枚フェード
+       ========================= */
     .hero {
       position: relative;
-
       width: 100%;
-
-      aspect-ratio:
-        1080 / 600;
-
+      aspect-ratio: 1080 / 600;
       overflow: hidden;
-
       background: #f2f2f2;
     }
 
     .hero img {
       position: absolute;
-
       inset: 0;
-
       width: 100%;
       height: 100%;
-
       object-fit: cover;
-
       opacity: 0;
-
-      transition:
-        opacity 1s ease-in-out;
+      transition: opacity 1s ease-in-out;
     }
 
     .hero img.active {
       opacity: 1;
     }
 
-
-    /* ==================================================
+    /* =========================
        バナー
-       ================================================== */
-
+       ========================= */
     .banners {
-      padding:
-        18px 14px 26px;
-
+      padding: 18px 14px 26px;
       display: grid;
-
       gap: 14px;
     }
 
     .banner {
       display: block;
-
       width: 100%;
-
       border-radius: 12px;
-
       overflow: hidden;
-
       text-decoration: none;
     }
 
     .banner img {
       display: block;
-
       width: 100%;
       height: auto;
     }
 
-
-    /* ==================================================
+    /* =========================
        フッター
-       ================================================== */
-
+       ========================= */
     footer {
-      padding:
-        28px 20px 34px;
-
+      padding: 28px 20px 34px;
       background: #f5f5f5;
-
       color: #333;
-
       text-align: center;
-
       line-height: 1.8;
-
       font-size: 14px;
     }
 
     footer .name {
-      margin-bottom: 8px;
-
-      font-size: 16px;
-
       font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 8px;
     }
 
     footer .address {
       margin-top: 12px;
     }
 
-
-    /* ==================================================
-       スマホ
-       ================================================== */
-
+    /* =========================
+       スマホ調整
+       ========================= */
     @media (max-width: 430px) {
-
       .header-menu {
         left: 1%;
         right: 1%;
         bottom: 2%;
-
         gap: 3px;
       }
 
       .header-menu a {
         min-height: 34px;
-
-        padding:
-          3px 1px;
-
-        border-radius: 6px;
-
+        padding: 3px 1px;
         font-size: 8.5px;
+        border-radius: 6px;
       }
     }
 
-
-    @media (
-      prefers-reduced-motion:
-      reduce
-    ) {
-
+    @media (prefers-reduced-motion: reduce) {
       .hero img {
         transition: none;
       }
     }
-
   </style>
 </head>
 
-
 <body>
-
   <main class="page">
 
-
-    <!-- ==================================================
+    <!-- =========================
          ヘッダー
-         ================================================== -->
-
+         ========================= -->
     <header class="campaign-header">
-
       <img
         src="he.png"
-        alt="いぬかわ賑わいプロジェクト"
+        alt="上野でゾクッと発見！その先に、まだ知らないいぬかわがある。スマホで楽々アンケートガチャ"
       >
 
+      <nav class="header-menu" aria-label="メインメニュー">
 
-      <nav
-        class="header-menu"
-        aria-label="メインメニュー"
-      >
-
-        <!-- アンケート -->
-
+        <!-- アンケート：LIFFから開く -->
         <a
-          href="survey.html"
+          href="https://liff.line.me/2011366916-HlklylXX"
           class="survey-link"
         >
           アンケート
         </a>
-
-
-        <!-- 犬川地区HP -->
 
         <a
           href="https://www.inukawa.com"
@@ -305,9 +215,6 @@
           犬川地区<br>HP
         </a>
 
-
-        <!-- 犬川地区Instagram -->
-
         <a
           href="https://www.instagram.com/inukawaegube/"
           target="_blank"
@@ -316,9 +223,6 @@
           犬川地区<br>Instagram
         </a>
 
-
-        <!-- 川西町HP -->
-
         <a
           href="https://www.town.kawanishi.yamagata.jp/"
           target="_blank"
@@ -326,9 +230,6 @@
         >
           川西町<br>HP
         </a>
-
-
-        <!-- 上野ゾク夏祭り -->
 
         <a
           href="https://zokunatsu.com/"
@@ -339,68 +240,32 @@
         </a>
 
       </nav>
-
     </header>
 
-
-
-    <!-- ==================================================
+    <!-- =========================
          トップ画像4枚
-         ================================================== -->
-
-    <section
-      class="hero"
-      aria-label="犬川地区メインビジュアル"
-    >
-
-      <img
-        src="top1.png"
-        alt=""
-        class="active"
-      >
-
-      <img
-        src="top2.png"
-        alt=""
-      >
-
-      <img
-        src="top3.png"
-        alt=""
-      >
-
-      <img
-        src="top4.png"
-        alt=""
-      >
-
+         ========================= -->
+    <section class="hero" aria-label="犬川地区メインビジュアル">
+      <img src="top1.png" alt="" class="active">
+      <img src="top2.png" alt="">
+      <img src="top3.png" alt="">
+      <img src="top4.png" alt="">
     </section>
 
-
-
-    <!-- ==================================================
+    <!-- =========================
          バナー
-         ================================================== -->
-
+         アンケートだけ時間制御対象
+         その他リンクは常時利用可能
+         ========================= -->
     <section class="banners">
 
-
-      <!-- アンケート -->
-
+      <!-- アンケート：LIFFから開く -->
       <a
         class="banner survey-link"
-        href="survey.html"
+        href="https://liff.line.me/2011366916-HlklylXX"
       >
-
-        <img
-          src="inukawaank.png"
-          alt="アンケート"
-        >
-
+        <img src="inukawaank.png" alt="アンケート">
       </a>
-
-
-      <!-- 犬川地区HP -->
 
       <a
         class="banner"
@@ -408,16 +273,8 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-
-        <img
-          src="inukawahp.png"
-          alt="犬川地区ホームページ"
-        >
-
+        <img src="inukawahp.png" alt="犬川地区ホームページ">
       </a>
-
-
-      <!-- 犬川地区Instagram -->
 
       <a
         class="banner"
@@ -425,16 +282,8 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-
-        <img
-          src="inukawains.png"
-          alt="犬川地区Instagram"
-        >
-
+        <img src="inukawains.png" alt="犬川地区Instagram">
       </a>
-
-
-      <!-- 川西町HP -->
 
       <a
         class="banner"
@@ -442,16 +291,8 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-
-        <img
-          src="kawanishihp.png"
-          alt="川西町ホームページ"
-        >
-
+        <img src="kawanishihp.png" alt="川西町ホームページ">
       </a>
-
-
-      <!-- 上野ゾク夏祭り -->
 
       <a
         class="banner"
@@ -459,307 +300,213 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-
-        <img
-          src="zoku.png"
-          alt="上野ゾク夏祭り"
-        >
-
+        <img src="zoku.png" alt="上野ゾク夏祭り">
       </a>
 
     </section>
 
-
-
-    <!-- ==================================================
-         フッター
-         ================================================== -->
-
     <footer>
-
       <div class="name">
-
         いぬかわ地域振興協議会<br>
-
         川西町犬川地区交流センター
-
       </div>
-
 
       <div class="address">
-
         〒999-0013<br>
-
         山形県東置賜郡川西町大字小松614-2
-
       </div>
-
 
       <div>
-
         [TEL]&nbsp; 0238-42-2462<br>
-
         [FAX]&nbsp; 0238-42-2664
-
       </div>
-
     </footer>
 
   </main>
 
-
-
   <script>
 
     /* ==================================================
-       テスト ON / OFF
+       本番 / テスト ON・OFF 切り替え
 
-       false
-       ↓
-       本番モード
-       9/20・9/21の指定時間だけ
-       アンケートへ進める
+       false = 本番
+               9/20・9/21の指定時間のみ
 
-       true
-       ↓
-       テストモード
-       日時を無視してアンケートへ進める
+       true  = テスト
+               時間制限を解除
 
-       ★本番では false
+       ※1人1回制限は解除しない
        ================================================== */
 
     const DEMO_MODE = true;
 
 
+    /* ==================================================
+       LIFF URL
+       ================================================== */
+
+    const SURVEY_LIFF_URL =
+      "https://liff.line.me/2011366916-HlklylXX";
+
 
     /* ==================================================
-       本番受付時間
+       本番システム受付時間（日本時間）
 
-       9月20日（日）
-       13:00 ～ 17:30
-
-       9月21日（月・祝）
-       10:00 ～ 17:30
-
-       日本時間
+       2026/9/20（日）13:00〜17:30
+       2026/9/21（月・祝）10:00〜17:30
        ================================================== */
 
     const SURVEY_WINDOWS = [
-
       {
-
-        start:
-          new Date(
-            "2026-09-20T13:00:00+09:00"
-          ),
-
-        end:
-          new Date(
-            "2026-09-20T17:30:00+09:00"
-          ),
-
+        start: new Date(
+          "2026-09-20T13:00:00+09:00"
+        ),
+        end: new Date(
+          "2026-09-20T17:30:00+09:00"
+        ),
         label:
           "9月20日（日）13:00〜17:30"
-
       },
 
-
       {
-
-        start:
-          new Date(
-            "2026-09-21T10:00:00+09:00"
-          ),
-
-        end:
-          new Date(
-            "2026-09-21T17:30:00+09:00"
-          ),
-
+        start: new Date(
+          "2026-09-21T10:00:00+09:00"
+        ),
+        end: new Date(
+          "2026-09-21T17:30:00+09:00"
+        ),
         label:
           "9月21日（月・祝）10:00〜17:30"
-
       }
-
     ];
 
 
-
     /* ==================================================
-       受付状態判定
+       現在の受付状態
        ================================================== */
 
-    function getSurveyStatus() {
+    function getSurveyStatus(
+      now = new Date()
+    ) {
 
-
-      /* テストON */
-
-      if (
-        DEMO_MODE === true
-      ) {
-
+      if (DEMO_MODE === true) {
         return {
           status: "open",
           nextLabel: ""
         };
-
       }
 
-
-      const now =
-        new Date();
-
-
-
-      /* 現在受付中か */
-
       for (
-        const item
-        of SURVEY_WINDOWS
+        const windowItem of SURVEY_WINDOWS
       ) {
 
         if (
-          now >= item.start &&
-          now < item.end
+          now >= windowItem.start &&
+          now < windowItem.end
         ) {
 
           return {
             status: "open",
-            nextLabel: item.label
+            nextLabel: windowItem.label
           };
 
         }
 
       }
 
-
-
-      /* 次の開催時間 */
-
       const nextWindow =
         SURVEY_WINDOWS.find(
-          item =>
-            now < item.start
+          windowItem =>
+            now < windowItem.start
         );
 
-
-      if (
-        nextWindow
-      ) {
+      if (nextWindow) {
 
         return {
           status: "before",
-          nextLabel:
-            nextWindow.label
+          nextLabel: nextWindow.label
         };
 
       }
-
-
-
-      /* 全日程終了 */
 
       return {
         status: "after",
         nextLabel: ""
       };
-
     }
 
 
-
     /* ==================================================
-       アンケート入口制御
+       アンケート入口
 
-       アンケートだけ時間制御
-
-       犬川地区HP
-       犬川地区Instagram
-       川西町HP
-       上野ゾク夏祭り
-
-       ↑は時間外でも常時利用可能
+       アンケートは必ず
+       LIFF URLから開く
        ================================================== */
 
     document
       .querySelectorAll(
         ".survey-link"
       )
-      .forEach(
-        link => {
+      .forEach(link => {
 
-          link.addEventListener(
-            "click",
-            event => {
+        link.addEventListener(
+          "click",
+          event => {
 
+            event.preventDefault();
 
-              const result =
-                getSurveyStatus();
+            const result =
+              getSurveyStatus();
 
+            /* --------------------------
+               開始前
+               -------------------------- */
 
+            if (
+              result.status === "before"
+            ) {
 
-              /* 受付開始前 */
+              alert(
+                "アンケートガチャはまだ受付開始前です。\n\n" +
+                "次回のシステム受付時間\n" +
+                result.nextLabel
+              );
 
-              if (
-                result.status ===
-                "before"
-              ) {
-
-                event.preventDefault();
-
-
-                alert(
-
-                  "アンケートガチャはまだ受付開始前です。\n\n" +
-
-                  "次回の受付時間\n" +
-
-                  result.nextLabel
-
-                );
-
-
-                return;
-
-              }
-
-
-
-              /* 全日程終了 */
-
-              if (
-                result.status ===
-                "after"
-              ) {
-
-                event.preventDefault();
-
-
-                alert(
-
-                  "アンケートガチャの受付は終了しました。\n\n" +
-
-                  "ご参加ありがとうございました。"
-
-                );
-
-
-                return;
-
-              }
-
-
-
-              /* 受付中
-                 ↓
-                 survey.htmlへ進む */
-
+              return;
             }
-          );
 
-        }
-      );
 
+            /* --------------------------
+               終了後
+               -------------------------- */
+
+            if (
+              result.status === "after"
+            ) {
+
+              alert(
+                "アンケートガチャの受付は終了しました。\n\n" +
+                "ご参加ありがとうございました。"
+              );
+
+              return;
+            }
+
+
+            /* --------------------------
+               受付中 / テスト中
+
+               survey.htmlへ直接行かず
+               LIFF URLから開く
+               -------------------------- */
+
+            window.location.href =
+              SURVEY_LIFF_URL;
+
+          }
+        );
+
+      });
 
 
     /* ==================================================
@@ -768,56 +515,38 @@
 
     (() => {
 
-
       const slides =
         Array.from(
-
           document.querySelectorAll(
             ".hero img"
           )
-
         );
 
-
       let current = 0;
-
 
       if (
         slides.length <= 1
       ) {
-
         return;
-
       }
-
 
       setInterval(
         () => {
 
           slides[current]
             .classList
-            .remove(
-              "active"
-            );
-
+            .remove("active");
 
           current =
-            (
-              current + 1
-            ) %
+            (current + 1) %
             slides.length;
-
 
           slides[current]
             .classList
-            .add(
-              "active"
-            );
+            .add("active");
 
         },
-
         4000
-
       );
 
     })();
@@ -825,5 +554,4 @@
   </script>
 
 </body>
-
 </html>
