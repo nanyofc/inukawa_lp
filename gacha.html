@@ -402,9 +402,6 @@
 
   <!-- ========================================
        受付案内
-
-       JSが万一壊れても、
-       この画面とTOPリンクは表示される
        ======================================== -->
 
   <section
@@ -556,8 +553,6 @@
 
   <!-- ==================================================
        受付判定専用
-
-       ガチャ本体とは別SCRIPTにしている
        ================================================== -->
 
   <script>
@@ -566,7 +561,7 @@
        強制ON/OFF
 
        false
-       → 明日の指定時間のみ
+       → 指定時間のみ
 
        true
        → 時間制限解除
@@ -576,7 +571,7 @@
 
 
     /* =========================
-       明日のテスト時間
+       テスト時間
        ========================= */
 
     const GACHA_START =
@@ -761,8 +756,6 @@
         getGachaStatus();
 
 
-      /* 開始前 */
-
       if (
         status === "before"
       ) {
@@ -786,8 +779,6 @@
       }
 
 
-      /* 終了後 */
-
       if (
         status === "after"
       ) {
@@ -809,8 +800,6 @@
 
       }
 
-
-      /* アンケート未回答 */
 
       if (
         !hasSurveyCompleted()
@@ -835,8 +824,6 @@
       }
 
 
-      /* 正規ルート */
-
       showOnlyScreen(
         startScreen
       );
@@ -845,10 +832,6 @@
 
     }
 
-
-    /* =========================
-       後半SCRIPTから使えるようにする
-       ========================= */
 
     window.INUKAWA_GATE = {
 
@@ -881,11 +864,6 @@
 
     (function () {
 
-
-      /* =========================
-         受付条件NGなら
-         ガチャ本体を起動しない
-         ========================= */
 
       if (
         !window.INUKAWA_GATE ||
@@ -1204,8 +1182,6 @@
         async function () {
 
 
-          /* 時間をもう一度確認 */
-
           const status =
             window
               .INUKAWA_GATE
@@ -1234,8 +1210,6 @@
 
           }
 
-
-          /* アンケート確認 */
 
           if (
             !window
@@ -1337,4 +1311,246 @@
 
             /* =========================
                抽選成功後に通行証を消す
-               ==============
+               ========================= */
+
+            sessionStorage.removeItem(
+              "inukawaSurveyCompleted"
+            );
+
+            sessionStorage.removeItem(
+              "inukawaSurveyCompletedAt"
+            );
+
+
+            /* =========================
+               動画再生
+               ========================= */
+
+            const prize =
+              prizes[currentResult];
+
+            movie.src =
+              prize.movie;
+
+            movie.currentTime = 0;
+
+            window
+              .INUKAWA_GATE
+              .showScreen(
+                movieScreen
+              );
+
+
+            let resultShown = false;
+
+
+            function showResult() {
+
+              if (resultShown) {
+                return;
+              }
+
+              resultShown = true;
+
+              rank.textContent =
+                prize.rank;
+
+              prizeImage.src =
+                prize.image;
+
+              prizeBox.classList.remove(
+                "redeemed"
+              );
+
+              resultInner.classList.remove(
+                "finished"
+              );
+
+              redeemButton.disabled =
+                false;
+
+              redeemButton.textContent =
+                "景品を引き換える";
+
+              window
+                .INUKAWA_GATE
+                .showScreen(
+                  resultScreen
+                );
+
+            }
+
+
+            movie.onended =
+              showResult;
+
+            movie.onerror =
+              showResult;
+
+
+            const playPromise =
+              movie.play();
+
+
+            if (
+              playPromise &&
+              typeof playPromise.catch === "function"
+            ) {
+
+              playPromise.catch(
+                function () {
+
+                  showResult();
+
+                }
+              );
+
+            }
+
+
+          } catch (error) {
+
+
+            console.error(
+              error
+            );
+
+
+            alert(
+              "抽選中にエラーが発生しました。\nもう一度お試しください。"
+            );
+
+
+            drawButton.disabled =
+              false;
+
+            drawButton.textContent =
+              "ガチャを引く";
+
+          }
+
+        }
+      );
+
+
+      /* =========================
+         景品引き換え
+         ========================= */
+
+      redeemButton.addEventListener(
+        "click",
+        async function () {
+
+
+          if (
+            !currentDrawId
+          ) {
+
+            alert(
+              "抽選IDがありません。"
+            );
+
+            return;
+
+          }
+
+
+          const confirmed =
+            confirm(
+              "景品を引き換え済みにしますか？\n\n※この操作はスタッフが行ってください。"
+            );
+
+
+          if (
+            !confirmed
+          ) {
+
+            return;
+
+          }
+
+
+          redeemButton.disabled =
+            true;
+
+          redeemButton.textContent =
+            "処理中…";
+
+
+          try {
+
+
+            const data =
+              await requestApi(
+                "redeem",
+                {
+                  drawId:
+                    currentDrawId
+                }
+              );
+
+
+            if (
+              !data ||
+              !data.success
+            ) {
+
+              alert(
+                data &&
+                data.message
+                  ? data.message
+                  : "引き換え処理に失敗しました"
+              );
+
+
+              redeemButton.disabled =
+                false;
+
+              redeemButton.textContent =
+                "景品を引き換える";
+
+              return;
+
+            }
+
+
+            prizeBox.classList.add(
+              "redeemed"
+            );
+
+            resultInner.classList.add(
+              "finished"
+            );
+
+
+          } catch (error) {
+
+
+            console.error(
+              error
+            );
+
+
+            alert(
+              "引き換え処理中にエラーが発生しました。"
+            );
+
+
+            redeemButton.disabled =
+              false;
+
+            redeemButton.textContent =
+              "景品を引き換える";
+
+          }
+
+        }
+      );
+
+
+    })();
+
+  </script>
+
+</body>
+</html>
