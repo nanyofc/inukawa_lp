@@ -1,11 +1,19 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
   <title>いぬかわアンケート</title>
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -24,69 +32,124 @@
         "Yu Gothic",
         Meiryo,
         sans-serif;
+
       background: #f4fbfd;
       color: #222;
     }
 
+
     .page {
       width: 100%;
       max-width: 760px;
+
       margin: 0 auto;
-      padding: 0 14px 40px;
+
+      padding:
+        0 14px 40px;
     }
 
+
+    /* ==================================================
+       ヘッダー
+       ================================================== */
+
     .header {
-      margin: 0 -14px 18px;
-      padding: 22px 18px;
+      margin:
+        0 -14px 18px;
+
+      padding:
+        22px 18px;
+
       background: #11bee8;
+
       text-align: center;
-      border-bottom: 4px solid #111;
+
+      border-bottom:
+        4px solid #111;
     }
 
     .header h1 {
       margin: 0;
-      font-size: clamp(24px, 7vw, 36px);
+
+      font-size:
+        clamp(24px, 7vw, 36px);
+
       font-weight: 900;
     }
 
     .header p {
-      margin: 8px 0 0;
+      margin:
+        8px 0 0;
+
       font-size: 14px;
       font-weight: 700;
     }
 
-    .intro,
-    .question {
-      background: #fff;
-      border: 1px solid #dce8ec;
-      border-radius: 14px;
-    }
+
+    /* ==================================================
+       説明
+       ================================================== */
 
     .intro {
       margin-bottom: 16px;
-      padding: 14px 16px;
-      line-height: 1.6;
+
+      padding:
+        14px 16px;
+
+      background: #fff;
+
+      border:
+        1px solid #dce8ec;
+
+      border-radius: 14px;
+
+      line-height: 1.7;
+
       font-size: 14px;
     }
 
+
+    /* ==================================================
+       質問
+       ================================================== */
+
     .question {
       margin-bottom: 16px;
-      padding: 18px 16px;
+
+      padding:
+        18px 16px;
+
+      background: #fff;
+
+      border:
+        1px solid #dce8ec;
+
+      border-radius: 14px;
     }
 
     .question h2 {
-      margin: 0 0 12px;
+      margin:
+        0 0 12px;
+
       font-size: 16px;
+
       line-height: 1.5;
     }
+
 
     .required,
     .optional {
       display: inline-block;
+
       margin-left: 8px;
-      padding: 2px 7px;
+
+      padding:
+        2px 7px;
+
       border-radius: 999px;
+
       font-size: 11px;
+
       vertical-align: 1px;
     }
 
@@ -100,50 +163,87 @@
       color: #333;
     }
 
+
     .note {
-      margin: -4px 0 12px;
+      margin:
+        -4px 0 12px;
+
       font-size: 12px;
+
       color: #666;
     }
 
+
+    /* ==================================================
+       選択肢
+       ================================================== */
+
     .choice {
       display: flex;
+
       align-items: flex-start;
+
       gap: 10px;
-      margin: 10px 0;
-      padding: 10px 12px;
-      border: 1px solid #dde5e8;
+
+      margin:
+        10px 0;
+
+      padding:
+        10px 12px;
+
+      border:
+        1px solid #dde5e8;
+
       border-radius: 10px;
+
       background: #fff;
     }
 
     .choice input {
-      margin-top: 3px;
+      flex: 0 0 auto;
+
       width: 18px;
       height: 18px;
-      flex: 0 0 auto;
+
+      margin-top: 3px;
     }
 
     .choice span {
-      line-height: 1.45;
       font-size: 15px;
+
+      line-height: 1.45;
     }
+
+
+    /* ==================================================
+       入力欄
+       ================================================== */
 
     .other-input,
     textarea {
       width: 100%;
+
       margin-top: 8px;
+
       padding: 12px;
-      border: 1px solid #cfd9dd;
+
+      border:
+        1px solid #cfd9dd;
+
       border-radius: 10px;
+
       background: #fff;
+
       color: #222;
+
       font: inherit;
+
       font-size: 16px;
     }
 
     textarea {
       min-height: 120px;
+
       resize: vertical;
     }
 
@@ -151,353 +251,965 @@
       display: none;
     }
 
+
+    /* ==================================================
+       最大3つ警告
+       ================================================== */
+
     .limit-message {
       display: none;
+
       margin-top: 8px;
-      padding: 9px 10px;
+
+      padding:
+        9px 10px;
+
       border-radius: 8px;
+
       background: #fff3f3;
+
       color: #a40000;
+
       font-size: 13px;
+
       font-weight: 700;
     }
+
+
+    /* ==================================================
+       送信
+       ================================================== */
 
     .submit-wrap {
       margin-top: 24px;
+
       text-align: center;
     }
 
-    button[type="submit"] {
+    #submitButton {
       width: 100%;
-      min-height: 54px;
-      border: 2px solid #111;
+
+      min-height: 56px;
+
+      border:
+        2px solid #111;
+
       border-radius: 12px;
+
       background: #11bee8;
+
       color: #111;
+
       font-size: 18px;
+
       font-weight: 900;
+
       cursor: pointer;
     }
 
-    button[type="submit"]:disabled {
-      opacity: 0.55;
+    #submitButton:disabled {
+      opacity: .55;
+
       cursor: not-allowed;
     }
 
+
     .status {
+      min-height: 24px;
+
       margin-top: 12px;
-      min-height: 22px;
-      font-size: 13px;
-      line-height: 1.5;
+
+      font-size: 14px;
+
+      font-weight: 700;
+
+      line-height: 1.6;
     }
+
 
     .back {
       display: inline-block;
+
       margin-top: 18px;
+
       color: #222;
+
       font-weight: 700;
+
       text-decoration: underline;
     }
+
+
+    /* ==================================================
+       回答済み・受付外画面
+       ================================================== */
+
+    #blockScreen {
+      display: none;
+
+      width: 100%;
+
+      max-width: 620px;
+
+      margin:
+        40px auto 0;
+
+      padding:
+        30px 20px;
+
+      background: #fff;
+
+      border:
+        1px solid #dce8ec;
+
+      border-radius: 16px;
+
+      text-align: center;
+    }
+
+    #blockScreen.active {
+      display: block;
+    }
+
+    #blockTitle {
+      margin:
+        0 0 18px;
+
+      font-size: 25px;
+
+      font-weight: 900;
+    }
+
+    #blockMessage {
+      margin:
+        0 0 24px;
+
+      font-size: 15px;
+
+      line-height: 1.8;
+    }
+
+    .block-button {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+
+      min-height: 54px;
+
+      margin:
+        12px auto 0;
+
+      padding:
+        10px 18px;
+
+      border:
+        2px solid #111;
+
+      border-radius: 999px;
+
+      background: #11bee8;
+
+      color: #111;
+
+      text-decoration: none;
+
+      font-size: 16px;
+
+      font-weight: 900;
+    }
+
+    .block-button.sub {
+      background: #fff;
+    }
+
+
+    #surveyContent {
+      display: block;
+    }
+
+    #surveyContent.hidden-page {
+      display: none;
+    }
+
   </style>
+
+
+  <!-- LINE LIFF -->
+  <script
+    src="https://static.line-scdn.net/liff/edge/2/sdk.js"
+  ></script>
+
 </head>
+
 
 <body>
 
   <main class="page">
 
-    <header class="header">
-      <h1>いぬかわアンケート</h1>
-      <p>アンケートに答えてガチャに挑戦！</p>
-    </header>
 
-    <div class="intro">
-      各質問にご回答ください。必須項目をすべて回答すると送信できます。
-    </div>
+    <!-- ==================================================
+         通常アンケート画面
+         ================================================== -->
 
-    <form id="surveyForm">
+    <div id="surveyContent">
 
-      <section class="question">
-        <h2>
-          お住まいを教えてください。
-          <span class="required">必須</span>
-        </h2>
+      <header class="header">
 
-        <p class="note">1つのみ回答</p>
+        <h1>
+          いぬかわアンケート
+        </h1>
 
-        <label class="choice">
-          <input type="radio" name="residence" value="東京都" required>
-          <span>東京都</span>
-        </label>
+        <p>
+          アンケートに答えてガチャに挑戦！
+        </p>
 
-        <label class="choice">
-          <input type="radio" name="residence" value="首都圏(東京以外)">
-          <span>首都圏（東京以外）</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="residence" value="その他">
-          <span>その他</span>
-        </label>
-      </section>
+      </header>
 
 
-      <section class="question">
-        <h2>
-          地方イベントや地域活動に参加したことがありますか。
-          <span class="required">必須</span>
-        </h2>
+      <div class="intro">
 
-        <p class="note">1つのみ回答</p>
+        各質問にご回答ください。<br>
 
-        <label class="choice">
-          <input type="radio" name="local_event_experience" value="よくある" required>
-          <span>よくある</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="local_event_experience" value="数回ある">
-          <span>数回ある</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="local_event_experience" value="ない">
-          <span>ない</span>
-        </label>
-      </section>
-
-
-      <section class="question">
-        <h2>
-          地方へ行くとしたら、どのような体験に興味がありますか。
-          <span class="required">必須</span>
-        </h2>
-
-        <p class="note">3つまで回答可</p>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="郷土料理">
-          <span>郷土料理</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="農業体験">
-          <span>農業体験</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="自然体験">
-          <span>自然体験</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="お祭り・伝統文化">
-          <span>お祭り・伝統文化</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="雪国体験">
-          <span>雪国体験</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="地域の人との交流">
-          <span>地域の人との交流</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="experience" value="防災・地域づくり体験">
-          <span>防災・地域づくり体験</span>
-        </label>
-
-        <label class="choice">
-          <input
-            type="checkbox"
-            id="experienceOtherCheck"
-            name="experience"
-            value="その他"
-          >
-          <span>その他</span>
-        </label>
-
-        <input
-          type="text"
-          id="experienceOtherText"
-          class="other-input hidden"
-          name="experience_other"
-          placeholder="その他の内容を入力してください"
-        >
-
-        <div id="experienceLimitMessage" class="limit-message">
-          3つまで選択できます。
-        </div>
-      </section>
-
-
-      <section class="question">
-        <h2>
-          山形県の地域イベントに参加してみたいと思いますか。
-          <span class="required">必須</span>
-        </h2>
-
-        <p class="note">1つのみ回答</p>
-
-        <label class="choice">
-          <input type="radio" name="yamagata_event_interest" value="是非参加したい" required>
-          <span>是非参加したい</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="yamagata_event_interest" value="内容によっては参加したい">
-          <span>内容によっては参加したい</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="yamagata_event_interest" value="あまり興味がない">
-          <span>あまり興味がない</span>
-        </label>
-      </section>
-
-
-      <section class="question">
-        <h2>
-          イベント情報はどこで知りたいですか。
-          <span class="required">必須</span>
-        </h2>
-
-        <p class="note">複数回答可</p>
-
-        <label class="choice">
-          <input type="checkbox" name="info_source" value="Instagram">
-          <span>Instagram</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="info_source" value="LINE">
-          <span>LINE</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="info_source" value="Facebook">
-          <span>Facebook</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="info_source" value="ホームページ">
-          <span>ホームページ</span>
-        </label>
-
-        <label class="choice">
-          <input type="checkbox" name="info_source" value="YouTube">
-          <span>YouTube</span>
-        </label>
-
-        <label class="choice">
-          <input
-            type="checkbox"
-            id="infoOtherCheck"
-            name="info_source"
-            value="その他"
-          >
-          <span>その他</span>
-        </label>
-
-        <input
-          type="text"
-          id="infoOtherText"
-          class="other-input hidden"
-          name="info_source_other"
-          placeholder="その他の内容を入力してください"
-        >
-      </section>
-
-
-      <section class="question">
-        <h2>
-          今後、地域からのイベントや体験情報が届くとしたら受け取ってみたいですか。
-          <span class="required">必須</span>
-        </h2>
-
-        <p class="note">1つのみ回答</p>
-
-        <label class="choice">
-          <input type="radio" name="future_info" value="ぜひ受け取りたい" required>
-          <span>ぜひ受け取りたい</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="future_info" value="興味ある内容なら受け取りたい">
-          <span>興味ある内容なら受け取りたい</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="future_info" value="希望しない">
-          <span>希望しない</span>
-        </label>
-      </section>
-
-
-      <section class="question">
-        <h2>
-          犬川地区に期待することがあれば教えてください。
-          <span class="optional">任意</span>
-        </h2>
-
-        <textarea
-          name="expectation"
-          placeholder="自由にご記入ください"
-        ></textarea>
-      </section>
-
-
-      <div class="submit-wrap">
-
-        <button type="submit" id="submitButton">
-          回答を送信する
-        </button>
-
-        <div id="status" class="status"></div>
-
-        <a href="index.html" class="back">
-          TOPに戻る
-        </a>
+        必須項目をすべて回答すると送信できます。
 
       </div>
 
-    </form>
+
+
+      <form id="surveyForm">
+
+
+        <!-- ==================================================
+             Q1
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+            お住まいを教えてください。
+            <span class="required">必須</span>
+          </h2>
+
+          <p class="note">
+            1つのみ回答
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="residence"
+              value="東京都"
+              required
+            >
+
+            <span>
+              東京都
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="residence"
+              value="首都圏(東京以外)"
+            >
+
+            <span>
+              首都圏（東京以外）
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="residence"
+              value="その他"
+            >
+
+            <span>
+              その他
+            </span>
+
+          </label>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q2
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            地方イベントや地域活動に参加したことがありますか。
+
+            <span class="required">
+              必須
+            </span>
+
+          </h2>
+
+
+          <p class="note">
+            1つのみ回答
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="local_event_experience"
+              value="よくある"
+              required
+            >
+
+            <span>
+              よくある
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="local_event_experience"
+              value="数回ある"
+            >
+
+            <span>
+              数回ある
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="local_event_experience"
+              value="ない"
+            >
+
+            <span>
+              ない
+            </span>
+
+          </label>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q3
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            地方へ行くとしたら、どのような体験に興味がありますか。
+
+            <span class="required">
+              必須
+            </span>
+
+          </h2>
+
+
+          <p class="note">
+            3つまで回答可
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="郷土料理"
+            >
+
+            <span>
+              郷土料理
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="農業体験"
+            >
+
+            <span>
+              農業体験
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="自然体験"
+            >
+
+            <span>
+              自然体験
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="お祭り・伝統文化"
+            >
+
+            <span>
+              お祭り・伝統文化
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="雪国体験"
+            >
+
+            <span>
+              雪国体験
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="地域の人との交流"
+            >
+
+            <span>
+              地域の人との交流
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="experience"
+              value="防災・地域づくり体験"
+            >
+
+            <span>
+              防災・地域づくり体験
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              id="experienceOtherCheck"
+              name="experience"
+              value="その他"
+            >
+
+            <span>
+              その他
+            </span>
+
+          </label>
+
+
+          <input
+            type="text"
+            id="experienceOtherText"
+            class="other-input hidden"
+            name="experience_other"
+            placeholder="その他の内容を入力してください"
+          >
+
+
+          <div
+            id="experienceLimitMessage"
+            class="limit-message"
+          >
+            3つまで選択できます。
+          </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q4
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            山形県の地域イベントに参加してみたいと思いますか。
+
+            <span class="required">
+              必須
+            </span>
+
+          </h2>
+
+
+          <p class="note">
+            1つのみ回答
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="yamagata_event_interest"
+              value="是非参加したい"
+              required
+            >
+
+            <span>
+              是非参加したい
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="yamagata_event_interest"
+              value="内容によっては参加したい"
+            >
+
+            <span>
+              内容によっては参加したい
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="yamagata_event_interest"
+              value="あまり興味がない"
+            >
+
+            <span>
+              あまり興味がない
+            </span>
+
+          </label>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q5
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            イベント情報はどこで知りたいですか。
+
+            <span class="required">
+              必須
+            </span>
+
+          </h2>
+
+
+          <p class="note">
+            複数回答可
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="info_source"
+              value="Instagram"
+            >
+
+            <span>
+              Instagram
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="info_source"
+              value="LINE"
+            >
+
+            <span>
+              LINE
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="info_source"
+              value="Facebook"
+            >
+
+            <span>
+              Facebook
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="info_source"
+              value="ホームページ"
+            >
+
+            <span>
+              ホームページ
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              name="info_source"
+              value="YouTube"
+            >
+
+            <span>
+              YouTube
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="checkbox"
+              id="infoOtherCheck"
+              name="info_source"
+              value="その他"
+            >
+
+            <span>
+              その他
+            </span>
+
+          </label>
+
+
+          <input
+            type="text"
+            id="infoOtherText"
+            class="other-input hidden"
+            name="info_source_other"
+            placeholder="その他の内容を入力してください"
+          >
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q6
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            今後、地域からのイベントや体験情報が届くとしたら受け取ってみたいですか。
+
+            <span class="required">
+              必須
+            </span>
+
+          </h2>
+
+
+          <p class="note">
+            1つのみ回答
+          </p>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="future_info"
+              value="ぜひ受け取りたい"
+              required
+            >
+
+            <span>
+              ぜひ受け取りたい
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="future_info"
+              value="興味ある内容なら受け取りたい"
+            >
+
+            <span>
+              興味ある内容なら受け取りたい
+            </span>
+
+          </label>
+
+
+          <label class="choice">
+
+            <input
+              type="radio"
+              name="future_info"
+              value="希望しない"
+            >
+
+            <span>
+              希望しない
+            </span>
+
+          </label>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             Q7
+             ================================================== -->
+
+        <section class="question">
+
+          <h2>
+
+            犬川地区に期待することがあれば教えてください。
+
+            <span class="optional">
+              任意
+            </span>
+
+          </h2>
+
+
+          <textarea
+            name="expectation"
+            placeholder="自由にご記入ください"
+          ></textarea>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             送信
+             ================================================== -->
+
+        <div class="submit-wrap">
+
+          <button
+            type="submit"
+            id="submitButton"
+            disabled
+          >
+            LINE認証を確認しています
+          </button>
+
+
+          <div
+            id="status"
+            class="status"
+          ></div>
+
+
+          <a
+            href="index.html"
+            class="back"
+          >
+            TOPに戻る
+          </a>
+
+        </div>
+
+      </form>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         回答済み / 受付外
+         ================================================== -->
+
+    <section id="blockScreen">
+
+      <h1 id="blockTitle"></h1>
+
+      <p id="blockMessage"></p>
+
+
+      <a
+        id="blockMainButton"
+        class="block-button"
+        href="gacha.html"
+      >
+        ガチャへ進む
+      </a>
+
+
+      <a
+        class="block-button sub"
+        href="index.html"
+      >
+        TOPへ戻る
+      </a>
+
+    </section>
+
 
   </main>
+
 
 
   <script>
 
     /* ==================================================
-       DEMO MODE
-
-       false
-       ↓
-       明日10:00〜10:30だけ利用可能
-
-       true
-       ↓
-       時間を無視して強制利用可能
+       設定
        ================================================== */
+
+
+    /*
+      false
+      ↓
+      本番時間のみ受付
+
+      true
+      ↓
+      時間制限を無視してテスト
+
+      ※これは時間制限だけのON/OFF
+      ※1人1回制限は常に有効
+    */
 
     const DEMO_MODE = false;
 
 
-    /* ==================================================
-       明日のアンケート受付時間
 
-       2026年9月9日
-       10:00〜10:30
-       日本時間
+    /* ==================================================
+       本番受付時間
        ================================================== */
 
-    const SURVEY_START =
-      new Date("2026-09-09T10:00:00+09:00");
+    const SURVEY_WINDOWS = [
 
-    const SURVEY_END =
-      new Date("2026-09-09T10:30:00+09:00");
+      {
+
+        start:
+          new Date(
+            "2026-09-20T13:00:00+09:00"
+          ),
+
+        end:
+          new Date(
+            "2026-09-20T17:30:00+09:00"
+          ),
+
+        label:
+          "9月20日（日）13:00〜17:30"
+
+      },
+
+      {
+
+        start:
+          new Date(
+            "2026-09-21T10:00:00+09:00"
+          ),
+
+        end:
+          new Date(
+            "2026-09-21T17:30:00+09:00"
+          ),
+
+        label:
+          "9月21日（月・祝）10:00〜17:30"
+
+      }
+
+    ];
+
 
 
     /* ==================================================
@@ -505,7 +1217,132 @@
        ================================================== */
 
     const WEB_APP_URL =
+
       "https://script.google.com/macros/s/AKfycbxo5-G2MnqJh91QPobD1MnM3ueK6yp1dBwGD71w1lxFNS2b0n3A6xDLiD37Iyu9HowLIw/exec";
+
+
+
+    /* ==================================================
+       LINE LIFF
+       ================================================== */
+
+    const LIFF_ID =
+      "2011366916-HlklylXX";
+
+
+    let lineIdToken = "";
+
+
+
+    /* ==================================================
+       DOM
+       ================================================== */
+
+    const surveyContent =
+      document.getElementById(
+        "surveyContent"
+      );
+
+
+    const blockScreen =
+      document.getElementById(
+        "blockScreen"
+      );
+
+
+    const blockTitle =
+      document.getElementById(
+        "blockTitle"
+      );
+
+
+    const blockMessage =
+      document.getElementById(
+        "blockMessage"
+      );
+
+
+    const blockMainButton =
+      document.getElementById(
+        "blockMainButton"
+      );
+
+
+    const form =
+      document.getElementById(
+        "surveyForm"
+      );
+
+
+    const submitButton =
+      document.getElementById(
+        "submitButton"
+      );
+
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+
+    /* ==================================================
+       画面表示
+       ================================================== */
+
+    function showBlockScreen(
+      title,
+      message,
+      buttonText,
+      buttonHref,
+      showMainButton = true
+    ) {
+
+      surveyContent
+        .classList
+        .add(
+          "hidden-page"
+        );
+
+
+      blockTitle.textContent =
+        title;
+
+
+      blockMessage.innerHTML =
+        message;
+
+
+      if (
+        showMainButton
+      ) {
+
+        blockMainButton.style.display =
+          "flex";
+
+        blockMainButton.textContent =
+          buttonText;
+
+        blockMainButton.href =
+          buttonHref;
+
+      } else {
+
+        blockMainButton.style.display =
+          "none";
+
+      }
+
+
+      blockScreen
+        .classList
+        .add(
+          "active"
+        );
+
+    }
+
 
 
     /* ==================================================
@@ -514,432 +1351,1369 @@
 
     function getSurveyStatus() {
 
-      if (DEMO_MODE) {
-        return "open";
-      }
-
-      const now = new Date();
-
-      if (now < SURVEY_START) {
-        return "before";
-      }
 
       if (
-        now >= SURVEY_START &&
-        now < SURVEY_END
+        DEMO_MODE === true
       ) {
-        return "open";
-      }
 
-      return "after";
-    }
-
-
-    /* ==================================================
-       直URLアクセス対策
-       ================================================== */
-
-    function checkSurveyAccess() {
-
-      const surveyStatus =
-        getSurveyStatus();
-
-      if (surveyStatus === "open") {
-        return true;
-      }
-
-      if (surveyStatus === "before") {
-
-        alert(
-          "アンケートガチャはまだ受付開始前です。\n\n" +
-          "明日のテスト受付時間\n" +
-          "10:00〜10:30"
-        );
-
-        location.replace("index.html");
-
-        return false;
-      }
-
-      alert(
-        "本日のアンケートガチャ受付は終了しました。"
-      );
-
-      location.replace("index.html");
-
-      return false;
-    }
-
-
-    /* ページを直接開かれた時点で確認 */
-
-    checkSurveyAccess();
-
-
-    /* ==================================================
-       各要素
-       ================================================== */
-
-    const form =
-      document.getElementById("surveyForm");
-
-    const submitButton =
-      document.getElementById("submitButton");
-
-    const status =
-      document.getElementById("status");
-
-
-    const experienceChecks =
-      [...document.querySelectorAll(
-        'input[name="experience"]'
-      )];
-
-    const experienceOtherCheck =
-      document.getElementById(
-        "experienceOtherCheck"
-      );
-
-    const experienceOtherText =
-      document.getElementById(
-        "experienceOtherText"
-      );
-
-    const experienceLimitMessage =
-      document.getElementById(
-        "experienceLimitMessage"
-      );
-
-
-    const infoChecks =
-      [...document.querySelectorAll(
-        'input[name="info_source"]'
-      )];
-
-    const infoOtherCheck =
-      document.getElementById(
-        "infoOtherCheck"
-      );
-
-    const infoOtherText =
-      document.getElementById(
-        "infoOtherText"
-      );
-
-
-    /* ==================================================
-       興味のある体験
-       最大3つ
-       ================================================== */
-
-    experienceChecks.forEach(check => {
-
-      check.addEventListener(
-        "change",
-        event => {
-
-          const selected =
-            experienceChecks.filter(
-              item => item.checked
-            );
-
-          if (selected.length > 3) {
-
-            event.target.checked = false;
-
-            experienceLimitMessage.style.display =
-              "block";
-
-            setTimeout(() => {
-
-              experienceLimitMessage.style.display =
-                "none";
-
-            }, 2200);
-          }
-
-
-          if (experienceOtherCheck.checked) {
-
-            experienceOtherText.classList.remove(
-              "hidden"
-            );
-
-            experienceOtherText.required = true;
-
-          } else {
-
-            experienceOtherText.classList.add(
-              "hidden"
-            );
-
-            experienceOtherText.required = false;
-
-            experienceOtherText.value = "";
-          }
-        }
-      );
-    });
-
-
-    /* ==================================================
-       情報源 その他
-       ================================================== */
-
-    infoOtherCheck.addEventListener(
-      "change",
-      () => {
-
-        if (infoOtherCheck.checked) {
-
-          infoOtherText.classList.remove(
-            "hidden"
-          );
-
-          infoOtherText.required = true;
-
-        } else {
-
-          infoOtherText.classList.add(
-            "hidden"
-          );
-
-          infoOtherText.required = false;
-
-          infoOtherText.value = "";
-        }
-      }
-    );
-
-
-    /* ==================================================
-       アンケート送信
-       ================================================== */
-
-    form.addEventListener(
-      "submit",
-      async event => {
-
-        event.preventDefault();
-
-
-        /* =========================================
-           送信する瞬間にも時間を再確認
-
-           10:30を過ぎていたら送信させない
-           ========================================= */
-
-        const currentStatus =
-          getSurveyStatus();
-
-        if (currentStatus !== "open") {
-
-          submitButton.disabled = true;
-
-          status.textContent =
-            "アンケートの受付時間が終了しました。";
-
-          status.style.color =
-            "#a40000";
-
-          alert(
-            "本日のアンケートガチャ受付は終了しました。"
-          );
-
-          setTimeout(() => {
-
-            location.replace("index.html");
-
-          }, 700);
-
-          return;
-        }
-
-
-        /* =========================================
-           興味のある体験
-           ========================================= */
-
-        const selectedExperience =
-          experienceChecks
-            .filter(item => item.checked)
-            .map(item => item.value);
-
-
-        if (selectedExperience.length === 0) {
-
-          status.textContent =
-            "「興味のある体験」を1つ以上選択してください。";
-
-          status.style.color =
-            "#a40000";
-
-          return;
-        }
-
-
-        /* =========================================
-           情報源
-           ========================================= */
-
-        const selectedInfo =
-          infoChecks
-            .filter(item => item.checked)
-            .map(item => item.value);
-
-
-        if (selectedInfo.length === 0) {
-
-          status.textContent =
-            "「イベント情報はどこで知りたいですか」を1つ以上選択してください。";
-
-          status.style.color =
-            "#a40000";
-
-          return;
-        }
-
-
-        if (!form.reportValidity()) {
-          return;
-        }
-
-
-        const formData =
-          new FormData(form);
-
-
-        const data = {
-
-          residence:
-            formData.get("residence") || "",
-
-          local_event_experience:
-            formData.get(
-              "local_event_experience"
-            ) || "",
-
-          experience:
-            selectedExperience,
-
-          experience_other:
-            formData.get(
-              "experience_other"
-            ) || "",
-
-          yamagata_event_interest:
-            formData.get(
-              "yamagata_event_interest"
-            ) || "",
-
-          info_source:
-            selectedInfo,
-
-          info_source_other:
-            formData.get(
-              "info_source_other"
-            ) || "",
-
-          future_info:
-            formData.get(
-              "future_info"
-            ) || "",
-
-          expectation:
-            formData.get(
-              "expectation"
-            ) || ""
+        return {
+          status: "open",
+          nextLabel: ""
         };
 
-
-        submitButton.disabled = true;
-
-        submitButton.textContent =
-          "送信中…";
-
-        status.textContent =
-          "回答を送信しています。";
-
-        status.style.color =
-          "#333";
+      }
 
 
-        try {
+      const now =
+        new Date();
 
-          await fetch(
-            WEB_APP_URL,
-            {
-              method: "POST",
 
-              mode: "no-cors",
+      for (
+        const item
+        of SURVEY_WINDOWS
+      ) {
 
-              headers: {
-                "Content-Type":
-                  "text/plain;charset=utf-8"
+        if (
+          now >= item.start &&
+          now < item.end
+        ) {
+
+          return {
+            status: "open",
+            nextLabel:
+              item.label
+          };
+
+        }
+
+      }
+
+
+      const nextWindow =
+        SURVEY_WINDOWS.find(
+          item =>
+            now < item.start
+        );
+
+
+      if (
+        nextWindow
+      ) {
+
+        return {
+          status: "before",
+          nextLabel:
+            nextWindow.label
+        };
+
+      }
+
+
+      return {
+        status: "after",
+        nextLabel: ""
+      };
+
+    }
+
+
+
+    /* ==================================================
+       JSONP API
+       ================================================== */
+
+    function requestApi(
+      action,
+      params = {}
+    ) {
+
+      return new Promise(
+        (
+          resolve,
+          reject
+        ) => {
+
+
+          const callbackName =
+
+            "inukawaCallback_" +
+
+            Date.now() +
+
+            "_" +
+
+            Math
+              .random()
+              .toString(36)
+              .slice(2);
+
+
+          const script =
+            document.createElement(
+              "script"
+            );
+
+
+          let finished =
+            false;
+
+
+          const timer =
+            setTimeout(
+              () => {
+
+                cleanup();
+
+                reject(
+                  new Error(
+                    "通信タイムアウト"
+                  )
+                );
+
               },
 
-              body:
-                JSON.stringify(data)
+              10000
+
+            );
+
+
+          function cleanup() {
+
+            if (
+              finished
+            ) {
+
+              return;
+
             }
+
+
+            finished =
+              true;
+
+
+            clearTimeout(
+              timer
+            );
+
+
+            try {
+
+              delete window[
+                callbackName
+              ];
+
+            } catch (
+              error
+            ) {
+
+              window[
+                callbackName
+              ] =
+                undefined;
+
+            }
+
+
+            if (
+              script.parentNode
+            ) {
+
+              script
+                .parentNode
+                .removeChild(
+                  script
+                );
+
+            }
+
+          }
+
+
+          window[
+            callbackName
+          ] =
+            function (
+              data
+            ) {
+
+              cleanup();
+
+              resolve(
+                data
+              );
+
+            };
+
+
+          script.onerror =
+            function () {
+
+              cleanup();
+
+              reject(
+                new Error(
+                  "通信エラー"
+                )
+              );
+
+            };
+
+
+          let url =
+
+            WEB_APP_URL +
+
+            "?action=" +
+
+            encodeURIComponent(
+              action
+            ) +
+
+            "&callback=" +
+
+            encodeURIComponent(
+              callbackName
+            ) +
+
+            "&_=" +
+
+            Date.now();
+
+
+          Object
+            .keys(
+              params
+            )
+            .forEach(
+              key => {
+
+                url +=
+
+                  "&" +
+
+                  encodeURIComponent(
+                    key
+                  ) +
+
+                  "=" +
+
+                  encodeURIComponent(
+                    params[key]
+                  );
+
+              }
+            );
+
+
+          script.src =
+            url;
+
+
+          document
+            .head
+            .appendChild(
+              script
+            );
+
+        }
+      );
+
+    }
+
+
+
+    /* ==================================================
+       LINE認証
+       ================================================== */
+
+    async function initLineAuth() {
+
+
+      if (
+        typeof liff ===
+        "undefined"
+      ) {
+
+        throw new Error(
+          "LINE認証を読み込めませんでした"
+        );
+
+      }
+
+
+      await liff.init({
+
+        liffId:
+          LIFF_ID
+
+      });
+
+
+      if (
+        !liff.isLoggedIn()
+      ) {
+
+        liff.login({
+
+          redirectUri:
+            window.location.href
+
+        });
+
+
+        return false;
+
+      }
+
+
+      const token =
+        liff.getIDToken();
+
+
+      if (
+        !token
+      ) {
+
+        throw new Error(
+          "LINE認証情報を取得できませんでした"
+        );
+
+      }
+
+
+      lineIdToken =
+        token;
+
+
+      return true;
+
+    }
+
+
+
+    /* ==================================================
+       利用状況確認
+
+       Apps Script側で
+       action=surveyStatus
+       を作る
+
+       expected:
+       {
+         success: true,
+         answered: true/false,
+         drawn: true/false
+       }
+       ================================================== */
+
+    async function checkUserStatus() {
+
+
+      const data =
+        await requestApi(
+          "surveyStatus",
+          {
+            idToken:
+              lineIdToken
+          }
+        );
+
+
+      if (
+        !data ||
+        !data.success
+      ) {
+
+        throw new Error(
+
+          data &&
+          data.message
+
+            ? data.message
+
+            : "利用状況を確認できませんでした"
+
+        );
+
+      }
+
+
+      return data;
+
+    }
+
+
+
+    /* ==================================================
+       初期処理
+       ================================================== */
+
+    async function initializePage() {
+
+
+      const timeStatus =
+        getSurveyStatus();
+
+
+
+      /* 開始前 */
+
+      if (
+        timeStatus.status ===
+        "before"
+      ) {
+
+        showBlockScreen(
+
+          "まだ受付開始前です",
+
+          "次回のアンケートガチャ受付時間は<br><br>" +
+
+          "<strong>" +
+
+          timeStatus.nextLabel +
+
+          "</strong><br><br>" +
+
+          "です。",
+
+          "",
+
+          "",
+
+          false
+
+        );
+
+
+        return;
+
+      }
+
+
+
+      /* 全日程終了 */
+
+      if (
+        timeStatus.status ===
+        "after"
+      ) {
+
+        showBlockScreen(
+
+          "受付は終了しました",
+
+          "アンケートガチャの受付は終了しました。<br><br>" +
+
+          "ご参加ありがとうございました。",
+
+          "",
+
+          "",
+
+          false
+
+        );
+
+
+        return;
+
+      }
+
+
+
+      /* LINE認証 */
+
+      try {
+
+
+        status.textContent =
+          "LINE認証を確認しています。";
+
+
+        submitButton.disabled =
+          true;
+
+
+        const authReady =
+          await initLineAuth();
+
+
+        if (
+          !authReady
+        ) {
+
+          return;
+
+        }
+
+
+
+        /* サーバーで回答済み確認 */
+
+        status.textContent =
+          "回答状況を確認しています。";
+
+
+        const userStatus =
+          await checkUserStatus();
+
+
+
+        /* すでにガチャまで終了 */
+
+        if (
+          userStatus.drawn ===
+          true
+        ) {
+
+          showBlockScreen(
+
+            "すでにご参加済みです",
+
+            "このLINEアカウントでは<br>" +
+
+            "アンケート回答・ガチャ抽選が完了しています。<br><br>" +
+
+            "同じLINEアカウントで再度参加することはできません。",
+
+            "",
+
+            "",
+
+            false
+
           );
 
 
-          status.textContent =
-            "回答を送信しました。";
+          return;
 
-          status.style.color =
-            "#087f23";
-
-          submitButton.textContent =
-            "送信完了";
+        }
 
 
-          /* =========================================
-             ガチャへの簡易通行証
 
-             アンケートを送信したブラウザだけ
-             gacha.htmlへ進めるために使用
+        /* アンケート回答済み
+           ガチャはまだ */
 
-             ※本番ではApps Script側でも確認する
-             ========================================= */
+        if (
+          userStatus.answered ===
+          true
+        ) {
 
           sessionStorage.setItem(
             "inukawaSurveyCompleted",
             "true"
           );
 
-          sessionStorage.setItem(
-            "inukawaSurveyCompletedAt",
-            String(Date.now())
+
+          showBlockScreen(
+
+            "アンケートは回答済みです",
+
+            "このLINEアカウントでは<br>" +
+
+            "すでにアンケートへの回答が完了しています。<br><br>" +
+
+            "ガチャへお進みください。",
+
+            "ガチャへ進む",
+
+            "gacha.html",
+
+            true
+
           );
 
 
-          setTimeout(() => {
+          return;
 
-            location.href =
-              "gacha.html";
-
-          }, 800);
+        }
 
 
-        } catch (error) {
+
+        /* 初回ユーザー */
+
+        submitButton.disabled =
+          false;
+
+
+        submitButton.textContent =
+          "回答を送信する";
+
+
+        status.textContent =
+          "";
+
+
+      } catch (
+        error
+      ) {
+
+
+        console.error(
+          error
+        );
+
+
+        submitButton.disabled =
+          true;
+
+
+        submitButton.textContent =
+          "利用できません";
+
+
+        status.textContent =
+
+          error &&
+          error.message
+
+            ? error.message
+
+            : "LINE認証に失敗しました。";
+
+
+        status.style.color =
+          "#a40000";
+
+      }
+
+    }
+
+
+
+    /* ==================================================
+       最大3つ
+       ================================================== */
+
+    const experienceChecks =
+
+      [
+        ...document.querySelectorAll(
+          'input[name="experience"]'
+        )
+      ];
+
+
+    const experienceOtherCheck =
+
+      document.getElementById(
+        "experienceOtherCheck"
+      );
+
+
+    const experienceOtherText =
+
+      document.getElementById(
+        "experienceOtherText"
+      );
+
+
+    const experienceLimitMessage =
+
+      document.getElementById(
+        "experienceLimitMessage"
+      );
+
+
+
+    experienceChecks
+      .forEach(
+        check => {
+
+          check.addEventListener(
+            "change",
+            event => {
+
+
+              const selected =
+
+                experienceChecks
+                  .filter(
+                    item =>
+                      item.checked
+                  );
+
+
+              if (
+                selected.length > 3
+              ) {
+
+                event.target.checked =
+                  false;
+
+
+                experienceLimitMessage.style.display =
+                  "block";
+
+
+                setTimeout(
+                  () => {
+
+                    experienceLimitMessage.style.display =
+                      "none";
+
+                  },
+
+                  2200
+
+                );
+
+              }
+
+
+
+              if (
+                experienceOtherCheck.checked
+              ) {
+
+                experienceOtherText
+                  .classList
+                  .remove(
+                    "hidden"
+                  );
+
+
+                experienceOtherText.required =
+                  true;
+
+              } else {
+
+                experienceOtherText
+                  .classList
+                  .add(
+                    "hidden"
+                  );
+
+
+                experienceOtherText.required =
+                  false;
+
+
+                experienceOtherText.value =
+                  "";
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+
+    /* ==================================================
+       情報源 その他
+       ================================================== */
+
+    const infoChecks =
+
+      [
+        ...document.querySelectorAll(
+          'input[name="info_source"]'
+        )
+      ];
+
+
+    const infoOtherCheck =
+
+      document.getElementById(
+        "infoOtherCheck"
+      );
+
+
+    const infoOtherText =
+
+      document.getElementById(
+        "infoOtherText"
+      );
+
+
+
+    infoOtherCheck
+      .addEventListener(
+        "change",
+        () => {
+
+
+          if (
+            infoOtherCheck.checked
+          ) {
+
+            infoOtherText
+              .classList
+              .remove(
+                "hidden"
+              );
+
+
+            infoOtherText.required =
+              true;
+
+          } else {
+
+            infoOtherText
+              .classList
+              .add(
+                "hidden"
+              );
+
+
+            infoOtherText.required =
+              false;
+
+
+            infoOtherText.value =
+              "";
+
+          }
+
+        }
+      );
+
+
+
+    /* ==================================================
+       送信
+       ================================================== */
+
+    form.addEventListener(
+      "submit",
+      async event => {
+
+
+        event.preventDefault();
+
+
+
+        /* 時間を再確認 */
+
+        const currentTimeStatus =
+          getSurveyStatus();
+
+
+        if (
+          currentTimeStatus.status !==
+          "open"
+        ) {
+
+          submitButton.disabled =
+            true;
+
 
           status.textContent =
-            "送信できませんでした。もう一度お試しください。";
+            "受付時間が終了しました。";
+
 
           status.style.color =
             "#a40000";
 
+
+          return;
+
+        }
+
+
+
+        /* LINEトークン確認 */
+
+        if (
+          !lineIdToken
+        ) {
+
+          status.textContent =
+            "LINE認証が確認できません。LINEからもう一度開いてください。";
+
+
+          status.style.color =
+            "#a40000";
+
+
+          return;
+
+        }
+
+
+
+        /* 送信直前にも
+           回答済みチェック */
+
+        try {
+
+
+          const beforeStatus =
+            await checkUserStatus();
+
+
+          if (
+            beforeStatus.answered ===
+            true
+          ) {
+
+            if (
+              beforeStatus.drawn ===
+              true
+            ) {
+
+              showBlockScreen(
+
+                "すでにご参加済みです",
+
+                "このLINEアカウントでは<br>" +
+
+                "アンケート回答・ガチャ抽選が完了しています。",
+
+                "",
+
+                "",
+
+                false
+
+              );
+
+            } else {
+
+              sessionStorage.setItem(
+                "inukawaSurveyCompleted",
+                "true"
+              );
+
+
+              showBlockScreen(
+
+                "アンケートは回答済みです",
+
+                "すでに回答が完了しています。<br><br>" +
+
+                "ガチャへお進みください。",
+
+                "ガチャへ進む",
+
+                "gacha.html",
+
+                true
+
+              );
+
+            }
+
+
+            return;
+
+          }
+
+
+        } catch (
+          error
+        ) {
+
+
+          console.error(
+            error
+          );
+
+
+          status.textContent =
+            "回答状況を確認できませんでした。もう一度お試しください。";
+
+
+          status.style.color =
+            "#a40000";
+
+
+          return;
+
+        }
+
+
+
+        /* 興味のある体験 */
+
+        const selectedExperience =
+
+          experienceChecks
+
+            .filter(
+              item =>
+                item.checked
+            )
+
+            .map(
+              item =>
+                item.value
+            );
+
+
+        if (
+          selectedExperience.length ===
+          0
+        ) {
+
+          status.textContent =
+            "「興味のある体験」を1つ以上選択してください。";
+
+
+          status.style.color =
+            "#a40000";
+
+
+          return;
+
+        }
+
+
+
+        /* 情報源 */
+
+        const selectedInfo =
+
+          infoChecks
+
+            .filter(
+              item =>
+                item.checked
+            )
+
+            .map(
+              item =>
+                item.value
+            );
+
+
+        if (
+          selectedInfo.length ===
+          0
+        ) {
+
+          status.textContent =
+            "「イベント情報はどこで知りたいですか」を1つ以上選択してください。";
+
+
+          status.style.color =
+            "#a40000";
+
+
+          return;
+
+        }
+
+
+
+        if (
+          !form.reportValidity()
+        ) {
+
+          return;
+
+        }
+
+
+
+        const formData =
+          new FormData(
+            form
+          );
+
+
+
+        const data = {
+
+
+          id_token:
+            lineIdToken,
+
+
+          residence:
+
+            formData.get(
+              "residence"
+            ) || "",
+
+
+          local_event_experience:
+
+            formData.get(
+              "local_event_experience"
+            ) || "",
+
+
+          experience:
+            selectedExperience,
+
+
+          experience_other:
+
+            formData.get(
+              "experience_other"
+            ) || "",
+
+
+          yamagata_event_interest:
+
+            formData.get(
+              "yamagata_event_interest"
+            ) || "",
+
+
+          info_source:
+            selectedInfo,
+
+
+          info_source_other:
+
+            formData.get(
+              "info_source_other"
+            ) || "",
+
+
+          future_info:
+
+            formData.get(
+              "future_info"
+            ) || "",
+
+
+          expectation:
+
+            formData.get(
+              "expectation"
+            ) || ""
+
+        };
+
+
+
+        submitButton.disabled =
+          true;
+
+
+        submitButton.textContent =
+          "送信中…";
+
+
+        status.textContent =
+          "回答を送信しています。";
+
+
+        status.style.color =
+          "#333";
+
+
+
+        try {
+
+
+          /*
+            Apps Scriptへ送信
+
+            no-corsなので
+            送信後にsurveyStatusを
+            サーバーへ再確認する
+          */
+
+          await fetch(
+
+            WEB_APP_URL,
+
+            {
+
+              method:
+                "POST",
+
+              mode:
+                "no-cors",
+
+              headers: {
+
+                "Content-Type":
+                  "text/plain;charset=utf-8"
+
+              },
+
+              body:
+                JSON.stringify(
+                  data
+                )
+
+            }
+
+          );
+
+
+
+          /* ==================================================
+             サーバーに実際に記録されたか確認
+             ================================================== */
+
+          let confirmed =
+            false;
+
+
+          let confirmedStatus =
+            null;
+
+
+          for (
+            let i = 0;
+            i < 8;
+            i++
+          ) {
+
+
+            await new Promise(
+              resolve =>
+                setTimeout(
+                  resolve,
+                  500
+                )
+            );
+
+
+            try {
+
+
+              confirmedStatus =
+                await checkUserStatus();
+
+
+              if (
+                confirmedStatus.answered ===
+                true
+              ) {
+
+                confirmed =
+                  true;
+
+
+                break;
+
+              }
+
+
+            } catch (
+              error
+            ) {
+
+              console.log(
+                error
+              );
+
+            }
+
+          }
+
+
+
+          if (
+            !confirmed
+          ) {
+
+            throw new Error(
+              "回答の保存を確認できませんでした"
+            );
+
+          }
+
+
+
+          /* 回答成功 */
+
+          sessionStorage.setItem(
+
+            "inukawaSurveyCompleted",
+
+            "true"
+
+          );
+
+
+          sessionStorage.setItem(
+
+            "inukawaSurveyCompletedAt",
+
+            String(
+              Date.now()
+            )
+
+          );
+
+
+          status.textContent =
+            "回答を送信しました。";
+
+
+          status.style.color =
+            "#087f23";
+
+
+          submitButton.textContent =
+            "送信完了";
+
+
+
+          /* ガチャへ */
+
+          setTimeout(
+            () => {
+
+              location.href =
+                "gacha.html";
+
+            },
+
+            700
+
+          );
+
+
+        } catch (
+          error
+        ) {
+
+
+          console.error(
+            error
+          );
+
+
+          status.textContent =
+
+            error &&
+            error.message
+
+              ? error.message
+
+              : "送信できませんでした。もう一度お試しください。";
+
+
+          status.style.color =
+            "#a40000";
+
+
           submitButton.disabled =
             false;
 
+
           submitButton.textContent =
             "回答を送信する";
+
         }
+
       }
     );
+
+
+
+    /* ==================================================
+       起動
+       ================================================== */
+
+    initializePage();
 
   </script>
 
 </body>
+
 </html>
