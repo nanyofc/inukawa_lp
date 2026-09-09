@@ -1168,22 +1168,17 @@
       });
 
 
-      if (
-        !liff.isLoggedIn()
-      ) {
+     if (
+  !liff.isLoggedIn()
+) {
 
-        liff.login({
+  window.location.replace(
+    "https://liff.line.me/2011366916-HlklylXX/gacha.html"
+  );
 
-          redirectUri:
-            window.location.href
+  return false;
 
-        });
-
-
-        return false;
-
-      }
-
+}
 
       const token =
         liff.getIDToken();
